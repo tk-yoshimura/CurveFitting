@@ -1,0 +1,2 @@
+# CurveFitting
+ curvefitting - linear, polynomial
