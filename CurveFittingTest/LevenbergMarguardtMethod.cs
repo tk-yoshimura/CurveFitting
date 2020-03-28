@@ -6,7 +6,7 @@ namespace CurveFitting.Tests {
     [TestClass()]
     public class LevenbergMarquardtTests {
         [TestMethod()]
-        public void ExecureFittingTest() {
+        public void ExecuteFittingTest() {
             double[] x_list = { 1, 3, 4, 7 };
             Vector p = new Vector(2, 3);
 
@@ -35,7 +35,7 @@ namespace CurveFitting.Tests {
 
             LevenbergMarquardtMethod fitting = new LevenbergMarquardtMethod(data_list, new FittingFunction(2, fitting_func, fitting_diff_func));
 
-            Assert.AreEqual((fitting.ExecureFitting(new Vector(7, 2)) - p).Norm, 0, 1e-10);
+            Assert.AreEqual((fitting.ExecuteFitting(new Vector(7, 2)) - p).Norm, 0, 1e-10);
         }
     }
 }

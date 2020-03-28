@@ -32,7 +32,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecureFitting() {
+        public Vector ExecuteFitting() {
             if(IsEnableSection) {
                 FittingData data;
                 double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = data_list.Length;

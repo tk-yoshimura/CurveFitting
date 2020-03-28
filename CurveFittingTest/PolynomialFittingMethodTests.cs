@@ -5,7 +5,7 @@ namespace CurveFitting.Tests {
     [TestClass()]
     public class PolynomialFittingMethodTests {
         [TestMethod()]
-        public void ExecureFittingTest() {
+        public void ExecuteFittingTest() {
             double[] x_list = { 1, 3, 4, 7, 8, 9, 13, 15, 20 };
             Vector p1 = new Vector(2, -1, 1, 5), p2 = new Vector(4, 3, -1);
  
@@ -22,8 +22,8 @@ namespace CurveFitting.Tests {
             PolynomialFittingMethod fitting1 = new PolynomialFittingMethod(data_list1, 3, true);
             PolynomialFittingMethod fitting2 = new PolynomialFittingMethod(data_list2, 3, false);
 
-            Assert.AreEqual((fitting1.ExecureFitting() - p1).Norm, 0, 1e-8);
-            Assert.AreEqual((fitting2.ExecureFitting() - p2).Norm, 0, 1e-8);
+            Assert.AreEqual((fitting1.ExecuteFitting() - p1).Norm, 0, 1e-8);
+            Assert.AreEqual((fitting2.ExecuteFitting() - p2).Norm, 0, 1e-8);
         }
     }
 }

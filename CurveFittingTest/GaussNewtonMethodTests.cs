@@ -6,7 +6,7 @@ namespace CurveFitting.Tests {
     [TestClass()]
     public class GaussNewtonMethodTests {
         [TestMethod()]
-        public void ExecureFittingTest() {
+        public void ExecuteFittingTest() {
             double[] x_list = { 1, 3, 4, 7 };
             Vector p = new Vector(2, 3);
 
@@ -35,7 +35,7 @@ namespace CurveFitting.Tests {
 
             GaussNewtonMethod fitting = new GaussNewtonMethod(data_list, new FittingFunction(2, fitting_func, fitting_diff_func));
 
-            Assert.AreEqual((fitting.ExecureFitting(new Vector(3, 4)) - p).Norm, 0, 1e-10);
+            Assert.AreEqual((fitting.ExecuteFitting(new Vector(3, 4)) - p).Norm, 0, 1e-10);
         }
     }
 }

@@ -68,7 +68,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecureFitting() {
+        public Vector ExecuteFitting() {
             if(weight_list == null) {
                 throw new InvalidOperationException();
             }

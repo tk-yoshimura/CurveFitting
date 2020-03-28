@@ -32,7 +32,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecureFitting(int converge_times = 8) {
+        public Vector ExecuteFitting(int converge_times = 8) {
             int n = data_list.Length;
             double err_threshold, inv_err;
             double[] weight_list = new double[n], err_list = new double[n], sort_err_list;
@@ -46,7 +46,7 @@ namespace CurveFitting {
             while(converge_times > 0) {
                 fitting = new WeightedLinearFittingMethod(data_list, weight_list, IsEnableSection);
                 
-                coef = fitting.ExecureFitting();
+                coef = fitting.ExecuteFitting();
 
                 err = fitting.Error(coef);
 

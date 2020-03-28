@@ -16,7 +16,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecureFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int loop = 64) {
+        public Vector ExecuteFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int loop = 64) {
             Vector errors, dparam;
             Matrix jacobian, jacobian_transpose;
 

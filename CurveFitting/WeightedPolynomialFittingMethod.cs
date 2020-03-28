@@ -83,7 +83,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecureFitting() {
+        public Vector ExecuteFitting() {
             Matrix m = new Matrix(data_list.Length, ParametersCount);
             Vector b = Vector.Zero(data_list.Length);
 
