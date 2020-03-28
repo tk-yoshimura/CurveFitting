@@ -1,5 +1,5 @@
 # CurveFitting
- curvefitting - linear, polynomial
+ Curvefitting - linear, polynomial
 
 ## Requirement
  .NET Standard 2.0
