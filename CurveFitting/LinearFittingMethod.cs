@@ -7,8 +7,8 @@ namespace CurveFitting {
     public class LinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public LinearFittingMethod(FittingData[] data_list, bool is_enable_section)
-            : base(data_list, is_enable_section ? 2 : 1) {
+        public LinearFittingMethod(double[] xs, double[] ys, bool is_enable_section)
+            : base(xs, ys, is_enable_section ? 2 : 1) {
 
             IsEnableSection = is_enable_section;
         }
@@ -21,7 +21,7 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -36,15 +36,15 @@ namespace CurveFitting {
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
             if (IsEnableSection) {
-                FittingData data;
-                double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = data_list.Length;
+                double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = Points;
 
-                for (int i = 0; i < data_list.Length; i++) {
-                    data = data_list[i];
-                    sum_x += data.X;
-                    sum_y += data.Y;
-                    sum_sq_x += data.X * data.X;
-                    sum_xy += data.X * data.Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i], y = Y[i];
+
+                    sum_x += x;
+                    sum_y += y;
+                    sum_sq_x += x * x;
+                    sum_xy += x * y;
                 }
 
                 double r = 1 / (sum_x * sum_x - n * sum_sq_x);
@@ -54,13 +54,13 @@ namespace CurveFitting {
                 return new Vector(a, b);
             }
             else {
-                FittingData data;
                 double sum_sq_x = 0, sum_xy = 0;
 
-                for (int i = 0; i < data_list.Length; i++) {
-                    data = data_list[i];
-                    sum_sq_x += data.X * data.X;
-                    sum_xy += data.X * data.Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i], y = Y[i];
+
+                    sum_sq_x += x * x;
+                    sum_xy += x * y;
                 }
 
                 return new Vector(sum_xy / sum_sq_x);

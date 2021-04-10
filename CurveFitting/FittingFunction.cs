@@ -9,14 +9,14 @@ namespace CurveFitting {
         readonly Func<double, Vector, Vector> df;
 
         /// <summary>コンストラクタ</summary>
-        public FittingFunction(int parameters_count, Func<double, Vector, double> f, Func<double, Vector, Vector> df) {
-            this.ParametersCount = parameters_count;
+        public FittingFunction(int parameters, Func<double, Vector, double> f, Func<double, Vector, Vector> df) {
+            this.Parameters = parameters;
             this.f = f;
             this.df = df;
         }
 
         /// <summary>パラメータ数</summary>
-        public int ParametersCount {
+        public int Parameters {
             get; private set;
         }
 

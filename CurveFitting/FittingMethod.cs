@@ -1,32 +1,42 @@
 ﻿using Algebra;
 using System;
+using System.Collections.Generic;
 
 namespace CurveFitting {
     /// <summary>フィッティング基本クラス</summary>
     public abstract class FittingMethod {
 
-        /// <summary>フィッティング対象のデータ</summary>
-        protected readonly FittingData[] data_list;
+        /// <summary>フィッティング対象の独立変数</summary>
+        public IReadOnlyList<double> X { get; private set; }
+
+        /// <summary>フィッティング対象の従属変数</summary>
+        public IReadOnlyList<double> Y { get; private set; }
+
+        /// <summary>フィッティング対象数</summary>
+        public int Points { get; private set; }
+
+        /// <summary>パラメータ数</summary>
+        public int Parameters { get; private set; }
 
         /// <summary>コンストラクタ</summary>
-        public FittingMethod(FittingData[] data_list, int parameters) {
-            if (data_list is null) {
-                throw new ArgumentNullException(nameof(data_list));
+        public FittingMethod(double[] xs, double[] ys, int parameters) {
+            if (xs is null) {
+                throw new ArgumentNullException(nameof(xs));
             }
-            if (data_list.Length < 1) {
-                throw new ArgumentException(nameof(data_list));
+            if (ys is null) {
+                throw new ArgumentNullException(nameof(ys));
+            }
+            if (xs.Length < parameters || xs.Length != ys.Length) {
+                throw new ArgumentException($"{nameof(xs.Length)}, {nameof(ys.Length)}");
             }
             if (parameters < 1) {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            this.data_list = data_list;
-            this.ParametersCount = parameters;
-        }
-
-        /// <summary>パラメータ数</summary>
-        public int ParametersCount {
-            get; private set;
+            this.X = xs;
+            this.Y = ys;
+            this.Points = xs.Length;
+            this.Parameters = parameters;
         }
 
         /// <summary>誤差二乗和</summary>
@@ -34,7 +44,7 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -52,14 +62,14 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            Vector errors = Vector.Zero(data_list.Length);
+            Vector errors = Vector.Zero(Points);
 
-            for (int i = 0; i < data_list.Length; i++) {
-                errors[i] = FittingValue(data_list[i].X, parameters) - data_list[i].Y;
+            for (int i = 0; i < Points; i++) {
+                errors[i] = FittingValue(X[i], parameters) - Y[i];
             }
 
             return errors;

@@ -9,27 +9,27 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedPolynomialFittingMethod(FittingData[] data_list, double[] weight_list, int degree, bool is_enable_section)
-            : base(data_list, degree + (is_enable_section ? 1 : 0)) {
+        public WeightedPolynomialFittingMethod(double[] xs, double[] ys, double[] weights, int degree, bool is_enable_section)
+            : base(xs, ys, degree + (is_enable_section ? 1 : 0)) {
 
             this.Degree = degree;
             this.IsEnableSection = is_enable_section;
 
-            if (weight_list is null) {
-                throw new ArgumentNullException(nameof(weight_list));
+            if (weights is null) {
+                throw new ArgumentNullException(nameof(weights));
             }
 
-            if (data_list.Length != weight_list.Length) {
-                throw new ArgumentException($"{nameof(data_list)},{nameof(weight_list)}");
+            if (Points != weights.Length) {
+                throw new ArgumentException($"{nameof(weights)}");
             }
 
-            foreach (var weight in weight_list) {
+            foreach (var weight in weights) {
                 if (!(weight >= 0)) {
-                    throw new ArgumentException(nameof(weight_list));
+                    throw new ArgumentException(nameof(weights));
                 }
             }
 
-            this.weight_list = (double[])weight_list.Clone();
+            this.weight_list = (double[])weights.Clone();
         }
 
         /// <summary>次数</summary>
@@ -45,7 +45,7 @@ namespace CurveFitting {
             if (coefficients is null) {
                 throw new ArgumentNullException(nameof(coefficients));
             }
-            if (coefficients.Dim != ParametersCount) {
+            if (coefficients.Dim != Parameters) {
                 throw new ArgumentException(nameof(coefficients));
             }
 
@@ -84,13 +84,13 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            Matrix m = new(data_list.Length, ParametersCount);
-            Vector b = Vector.Zero(data_list.Length);
+            Matrix m = new(Points, Parameters);
+            Vector b = Vector.Zero(Points);
 
             if (IsEnableSection) {
-                for (int i = 0; i < data_list.Length; i++) {
-                    double x = data_list[i].X;
-                    b[i] = data_list[i].Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i];
+                    b[i] = Y[i];
 
                     m[i, 0] = 1;
 
@@ -100,9 +100,9 @@ namespace CurveFitting {
                 }
             }
             else {
-                for (int i = 0; i < data_list.Length; i++) {
-                    double x = data_list[i].X;
-                    b[i] = data_list[i].Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i];
+                    b[i] = Y[i];
 
                     m[i, 0] = x;
 
@@ -114,7 +114,7 @@ namespace CurveFitting {
 
             Matrix m_transpose = m.Transpose;
 
-            for (int i = 0; i < data_list.Length; i++) {
+            for (int i = 0; i < Points; i++) {
                 for (int j = 0; j < m_transpose.Rows; j++) {
                     m_transpose[j, i] *= weight_list[i];
                 }

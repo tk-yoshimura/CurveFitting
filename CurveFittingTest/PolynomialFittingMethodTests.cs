@@ -6,21 +6,18 @@ namespace CurveFitting.Tests {
     public class PolynomialFittingMethodTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            double[] x_list = { 1, 3, 4, 7, 8, 9, 13, 15, 20 };
+            double[] xs = { 1, 3, 4, 7, 8, 9, 13, 15, 20 }, ys1 = new double[xs.Length], ys2 = new double[xs.Length];
             Vector p1 = new(2, -1, 1, 5), p2 = new(4, 3, -1);
 
-            FittingData[] data_list1 = new FittingData[x_list.Length], data_list2 = new FittingData[x_list.Length];
+            for (int i = 0; i < xs.Length; i++) {
+                double x = xs[i];
 
-            for (int i = 0; i < x_list.Length; i++) {
-                double x = x_list[i];
-
-                data_list1[i].X = data_list2[i].X = x;
-                data_list1[i].Y = p1[0] + p1[1] * x + p1[2] * x * x + p1[3] * x * x * x;
-                data_list2[i].Y = p2[0] * x + p2[1] * x * x + p2[2] * x * x * x;
+                ys1[i] = p1[0] + p1[1] * x + p1[2] * x * x + p1[3] * x * x * x;
+                ys2[i] = p2[0] * x + p2[1] * x * x + p2[2] * x * x * x;
             }
 
-            PolynomialFittingMethod fitting1 = new(data_list1, 3, true);
-            PolynomialFittingMethod fitting2 = new(data_list2, 3, false);
+            PolynomialFittingMethod fitting1 = new(xs, ys1, 3, is_enable_section: true);
+            PolynomialFittingMethod fitting2 = new(xs, ys2, 3, is_enable_section: false);
 
             Assert.AreEqual(0, (fitting1.ExecuteFitting() - p1).Norm, 1e-8);
             Assert.AreEqual(0, (fitting2.ExecuteFitting() - p2).Norm, 1e-8);

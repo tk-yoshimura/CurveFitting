@@ -6,10 +6,10 @@ namespace CurveFitting.Tests {
     public class LinearFittingMethodTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            FittingData[] data_list = { new FittingData(2, 1), new FittingData(3, 8) };
+            double[] xs = { 2, 3 }, ys = { 1, 8 };
 
-            LinearFittingMethod fitting1 = new(data_list, true);
-            LinearFittingMethod fitting2 = new(data_list, false);
+            LinearFittingMethod fitting1 = new(xs, ys, is_enable_section: true);
+            LinearFittingMethod fitting2 = new(xs, ys, is_enable_section: false);
 
             Assert.AreEqual(new Vector(-13, 7), fitting1.ExecuteFitting());
             Assert.AreEqual(new Vector(2), fitting2.ExecuteFitting());

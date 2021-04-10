@@ -5,8 +5,8 @@ namespace CurveFitting {
     /// <summary>多項式フィッティング</summary>
     public class PolynomialFittingMethod : FittingMethod {
         /// <summary>コンストラクタ</summary>
-        public PolynomialFittingMethod(FittingData[] data_list, int degree, bool is_enable_section)
-            : base(data_list, degree + (is_enable_section ? 1 : 0)) {
+        public PolynomialFittingMethod(double[] xs, double[] ys, int degree, bool is_enable_section)
+            : base(xs, ys, degree + (is_enable_section ? 1 : 0)) {
 
             this.Degree = degree;
             this.IsEnableSection = is_enable_section;
@@ -46,13 +46,13 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            Matrix m = new(data_list.Length, ParametersCount);
-            Vector b = Vector.Zero(data_list.Length);
+            Matrix m = new(Points, Parameters);
+            Vector b = Vector.Zero(Points);
 
             if (IsEnableSection) {
-                for (int i = 0; i < data_list.Length; i++) {
-                    double x = data_list[i].X;
-                    b[i] = data_list[i].Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i];
+                    b[i] = Y[i];
 
                     m[i, 0] = 1;
 
@@ -62,9 +62,9 @@ namespace CurveFitting {
                 }
             }
             else {
-                for (int i = 0; i < data_list.Length; i++) {
-                    double x = data_list[i].X;
-                    b[i] = data_list[i].Y;
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i];
+                    b[i] = Y[i];
 
                     m[i, 0] = x;
 

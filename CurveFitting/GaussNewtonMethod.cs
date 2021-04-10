@@ -6,8 +6,8 @@ namespace CurveFitting {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public GaussNewtonMethod(FittingData[] data_list, FittingFunction func)
-            : base(data_list, func.ParametersCount) {
+        public GaussNewtonMethod(double[] xs, double[] ys, FittingFunction func)
+            : base(xs, ys, func.Parameters) {
 
             this.func = func;
         }
@@ -39,12 +39,10 @@ namespace CurveFitting {
 
         /// <summary>ヤコビアン行列</summary>
         private Matrix Jacobian(Vector parameters) {
-            FittingData data;
-            Matrix jacobian = new(data_list.Length, func.ParametersCount);
+            Matrix jacobian = new(Points, func.Parameters);
 
-            for (int i = 0, j; i < data_list.Length; i++) {
-                data = data_list[i];
-                Vector df = func.DiffF(data.X, parameters);
+            for (int i = 0, j; i < Points; i++) {
+                Vector df = func.DiffF(X[i], parameters);
 
                 for (j = 0; j < parameters.Dim; j++) {
                     jacobian[i, j] = df[j];

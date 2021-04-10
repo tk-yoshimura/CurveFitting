@@ -1,5 +1,6 @@
 ﻿using Algebra;
 using System;
+using System.Linq;
 
 namespace CurveFitting {
 
@@ -7,8 +8,8 @@ namespace CurveFitting {
     public class RobustPolynomialFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustPolynomialFittingMethod(FittingData[] data_list, int degree, bool is_enable_section)
-            : base(data_list, degree + (is_enable_section ? 1 : 0)) {
+        public RobustPolynomialFittingMethod(double[] xs, double[] ys, int degree, bool is_enable_section)
+            : base(xs, ys, degree + (is_enable_section ? 1 : 0)) {
 
             this.Degree = degree;
             this.IsEnableSection = is_enable_section;
@@ -48,45 +49,45 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(int converge_times = 8) {
-            int n = data_list.Length;
             double err_threshold, inv_err;
-            double[] weight_list = new double[n], err_list = new double[n], sort_err_list;
+            double[] xs = X.ToArray(), ys = Y.ToArray();
+            double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
             WeightedPolynomialFittingMethod fitting;
 
-            for (int i = 0; i < n; i++) {
-                weight_list[i] = 1;
+            for (int i = 0; i < Points; i++) {
+                weights[i] = 1;
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedPolynomialFittingMethod(data_list, weight_list, Degree, IsEnableSection);
+                fitting = new WeightedPolynomialFittingMethod(xs, ys, weights, Degree, IsEnableSection);
 
                 coef = fitting.ExecuteFitting();
 
                 err = fitting.Error(coef);
 
-                for (int i = 0; i < n; i++) {
-                    err_list[i] = Math.Abs(err[i]);
+                for (int i = 0; i < Points; i++) {
+                    errs[i] = Math.Abs(err[i]);
                 }
 
-                sort_err_list = (double[])err_list.Clone();
+                sort_err_list = (double[])errs.Clone();
 
                 Array.Sort(sort_err_list);
 
-                err_threshold = sort_err_list[n / 2] * 1.25;
+                err_threshold = sort_err_list[Points / 2] * 1.25;
                 if (err_threshold <= 1e-14) {
                     break;
                 }
 
                 inv_err = 1 / err_threshold;
 
-                for (int i = 0; i < n; i++) {
-                    if (err_list[i] >= err_threshold) {
-                        weight_list[i] = 0;
+                for (int i = 0; i < Points; i++) {
+                    if (errs[i] >= err_threshold) {
+                        weights[i] = 0;
                     }
                     else {
-                        double r = (1 - err_list[i] * inv_err);
-                        weight_list[i] = r * r;
+                        double r = (1 - errs[i] * inv_err);
+                        weights[i] = r * r;
                     }
                 }
 

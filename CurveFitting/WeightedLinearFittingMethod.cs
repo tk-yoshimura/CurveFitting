@@ -9,26 +9,26 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedLinearFittingMethod(FittingData[] data_list, double[] weight_list, bool is_enable_section)
-            : base(data_list, is_enable_section ? 2 : 1) {
+        public WeightedLinearFittingMethod(double[] xs, double[] ys, double[] weights, bool is_enable_section)
+            : base(xs, ys, is_enable_section ? 2 : 1) {
 
             IsEnableSection = is_enable_section;
 
-            if (weight_list is null) {
-                throw new ArgumentNullException(nameof(weight_list));
+            if (weights is null) {
+                throw new ArgumentNullException(nameof(weights));
             }
 
-            if (data_list.Length != weight_list.Length) {
-                throw new ArgumentException($"{nameof(data_list)},{nameof(weight_list)}");
+            if (Points != weights.Length) {
+                throw new ArgumentException($"{nameof(weights)}");
             }
 
-            foreach (var weight in weight_list) {
+            foreach (var weight in weights) {
                 if (!(weight >= 0)) {
-                    throw new ArgumentException(nameof(weight_list));
+                    throw new ArgumentException(nameof(weights));
                 }
             }
 
-            this.weight_list = weight_list;
+            this.weight_list = weights;
         }
 
         /// <summary>y切片を有効にするか</summary>
@@ -39,7 +39,7 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -57,7 +57,7 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -76,17 +76,17 @@ namespace CurveFitting {
             }
 
             if (IsEnableSection) {
-                FittingData data;
                 double w, sum_w = 0, sum_wx = 0, sum_wy = 0, sum_wxx = 0, sum_wxy = 0;
 
-                for (int i = 0; i < data_list.Length; i++) {
-                    data = data_list[i];
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i], y = Y[i];
+
                     w = weight_list[i];
                     sum_w += w;
-                    sum_wx += w * data.X;
-                    sum_wy += w * data.Y;
-                    sum_wxx += w * data.X * data.X;
-                    sum_wxy += w * data.X * data.Y;
+                    sum_wx += w * x;
+                    sum_wy += w * y;
+                    sum_wxx += w * x * x;
+                    sum_wxy += w * x * y;
                 }
 
                 double r = 1 / (sum_wx * sum_wx - sum_w * sum_wxx);
@@ -96,14 +96,14 @@ namespace CurveFitting {
                 return new Vector(a, b);
             }
             else {
-                FittingData data;
                 double w, sum_wxx = 0, sum_wxy = 0;
 
-                for (int i = 0; i < data_list.Length; i++) {
-                    data = data_list[i];
+                for (int i = 0; i < Points; i++) {
+                    double x = X[i], y = Y[i];
+
                     w = weight_list[i];
-                    sum_wxx += w * data.X * data.X;
-                    sum_wxy += w * data.X * data.Y;
+                    sum_wxx += w * x * x;
+                    sum_wxy += w * x * y;
                 }
 
                 return new Vector(sum_wxy / sum_wxx);

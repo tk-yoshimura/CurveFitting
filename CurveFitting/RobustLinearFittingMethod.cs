@@ -1,5 +1,6 @@
 ﻿using Algebra;
 using System;
+using System.Linq;
 
 namespace CurveFitting {
 
@@ -7,8 +8,8 @@ namespace CurveFitting {
     public class RobustLinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFittingMethod(FittingData[] data_list, bool is_enable_section)
-            : base(data_list, is_enable_section ? 2 : 1) {
+        public RobustLinearFittingMethod(double[] xs, double[] ys, bool is_enable_section)
+            : base(xs, ys, is_enable_section ? 2 : 1) {
 
             IsEnableSection = is_enable_section;
         }
@@ -21,7 +22,7 @@ namespace CurveFitting {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if (parameters.Dim != ParametersCount) {
+            if (parameters.Dim != Parameters) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -35,45 +36,45 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(int converge_times = 8) {
-            int n = data_list.Length;
             double err_threshold, inv_err;
-            double[] weight_list = new double[n], err_list = new double[n], sort_err_list;
+            double[] xs = X.ToArray(), ys = Y.ToArray();
+            double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
             WeightedLinearFittingMethod fitting;
 
-            for (int i = 0; i < n; i++) {
-                weight_list[i] = 1;
+            for (int i = 0; i < Points; i++) {
+                weights[i] = 1;
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedLinearFittingMethod(data_list, weight_list, IsEnableSection);
+                fitting = new WeightedLinearFittingMethod(xs, ys, weights, IsEnableSection);
 
                 coef = fitting.ExecuteFitting();
 
                 err = fitting.Error(coef);
 
-                for (int i = 0; i < n; i++) {
-                    err_list[i] = Math.Abs(err[i]);
+                for (int i = 0; i < Points; i++) {
+                    errs[i] = Math.Abs(err[i]);
                 }
 
-                sort_err_list = (double[])err_list.Clone();
+                sort_err_list = (double[])errs.Clone();
 
                 Array.Sort(sort_err_list);
 
-                err_threshold = sort_err_list[n / 2] * 1.25;
+                err_threshold = sort_err_list[Points / 2] * 1.25;
                 if (err_threshold <= 1e-14) {
                     break;
                 }
 
                 inv_err = 1 / err_threshold;
 
-                for (int i = 0; i < n; i++) {
-                    if (err_list[i] >= err_threshold) {
-                        weight_list[i] = 0;
+                for (int i = 0; i < Points; i++) {
+                    if (errs[i] >= err_threshold) {
+                        weights[i] = 0;
                     }
                     else {
-                        double r = (1 - err_list[i] * inv_err);
-                        weight_list[i] = r * r;
+                        double r = (1 - errs[i] * inv_err);
+                        weights[i] = r * r;
                     }
                 }
 
