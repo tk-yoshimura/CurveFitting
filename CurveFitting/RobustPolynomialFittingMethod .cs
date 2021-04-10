@@ -8,11 +8,11 @@ namespace CurveFitting {
     public class RobustPolynomialFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustPolynomialFittingMethod(double[] xs, double[] ys, int degree, bool is_enable_intercept)
-            : base(xs, ys, degree + (is_enable_intercept ? 1 : 0)) {
+        public RobustPolynomialFittingMethod(double[] xs, double[] ys, int degree, bool enable_intercept)
+            : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
-            this.IsEnableIntercept = is_enable_intercept;
+            this.EnableIntercept = enable_intercept;
         }
 
         /// <summary>次数</summary>
@@ -21,11 +21,11 @@ namespace CurveFitting {
         }
 
         /// <summary>y切片を有効にするか</summary>
-        public bool IsEnableIntercept { get; private set; }
+        public bool EnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector coefficients) {
-            if (IsEnableIntercept) {
+            if (EnableIntercept) {
                 double y = coefficients[0], ploy_x = 1;
 
                 for (int i = 1; i < coefficients.Dim; i++) {
@@ -60,7 +60,7 @@ namespace CurveFitting {
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedPolynomialFittingMethod(xs, ys, weights, Degree, IsEnableIntercept);
+                fitting = new WeightedPolynomialFittingMethod(xs, ys, weights, Degree, EnableIntercept);
 
                 coef = fitting.ExecuteFitting();
 

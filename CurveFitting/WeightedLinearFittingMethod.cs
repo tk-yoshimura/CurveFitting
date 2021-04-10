@@ -9,10 +9,10 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedLinearFittingMethod(double[] xs, double[] ys, double[] weights, bool is_enable_intercept)
-            : base(xs, ys, is_enable_intercept ? 2 : 1) {
+        public WeightedLinearFittingMethod(double[] xs, double[] ys, double[] weights, bool enable_intercept)
+            : base(xs, ys, enable_intercept ? 2 : 1) {
 
-            IsEnableIntercept = is_enable_intercept;
+            EnableIntercept = enable_intercept;
 
             if (weights is null) {
                 throw new ArgumentNullException(nameof(weights));
@@ -32,7 +32,7 @@ namespace CurveFitting {
         }
 
         /// <summary>y切片を有効にするか</summary>
-        public bool IsEnableIntercept { get; private set; }
+        public bool EnableIntercept { get; private set; }
 
         /// <summary>重み付き誤差二乗和</summary>
         public double WeightedCost(Vector parameters) {
@@ -61,7 +61,7 @@ namespace CurveFitting {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            if (IsEnableIntercept) {
+            if (EnableIntercept) {
                 return parameters[0] + parameters[1] * x;
             }
             else {
@@ -75,7 +75,7 @@ namespace CurveFitting {
                 throw new InvalidOperationException();
             }
 
-            if (IsEnableIntercept) {
+            if (EnableIntercept) {
                 double w, sum_w = 0, sum_wx = 0, sum_wy = 0, sum_wxx = 0, sum_wxy = 0;
 
                 for (int i = 0; i < Points; i++) {

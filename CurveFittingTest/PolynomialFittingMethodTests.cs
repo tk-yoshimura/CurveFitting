@@ -16,8 +16,8 @@ namespace CurveFitting.Tests {
                 ys2[i] = p2[0] * x + p2[1] * x * x + p2[2] * x * x * x;
             }
 
-            PolynomialFittingMethod fitting1 = new(xs, ys1, 3, is_enable_intercept: true);
-            PolynomialFittingMethod fitting2 = new(xs, ys2, 3, is_enable_intercept: false);
+            PolynomialFittingMethod fitting1 = new(xs, ys1, 3, enable_intercept: true);
+            PolynomialFittingMethod fitting2 = new(xs, ys2, 3, enable_intercept: false);
 
             Assert.AreEqual(0, (fitting1.ExecuteFitting() - p1).Norm, 1e-8);
             Assert.AreEqual(0, (fitting2.ExecuteFitting() - p2).Norm, 1e-8);

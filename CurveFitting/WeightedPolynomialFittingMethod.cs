@@ -9,11 +9,11 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedPolynomialFittingMethod(double[] xs, double[] ys, double[] weights, int degree, bool is_enable_intercept)
-            : base(xs, ys, degree + (is_enable_intercept ? 1 : 0)) {
+        public WeightedPolynomialFittingMethod(double[] xs, double[] ys, double[] weights, int degree, bool enable_intercept)
+            : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
-            this.IsEnableIntercept = is_enable_intercept;
+            this.EnableIntercept = enable_intercept;
 
             if (weights is null) {
                 throw new ArgumentNullException(nameof(weights));
@@ -38,7 +38,7 @@ namespace CurveFitting {
         }
 
         /// <summary>y切片を有効にするか</summary>
-        public bool IsEnableIntercept { get; set; }
+        public bool EnableIntercept { get; set; }
 
         /// <summary>重み付き誤差二乗和</summary>
         public double WeightedCost(Vector coefficients) {
@@ -60,7 +60,7 @@ namespace CurveFitting {
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector coefficients) {
-            if (IsEnableIntercept) {
+            if (EnableIntercept) {
                 double y = coefficients[0], ploy_x = 1;
 
                 for (int i = 1; i < coefficients.Dim; i++) {
@@ -87,7 +87,7 @@ namespace CurveFitting {
             Matrix m = new(Points, Parameters);
             Vector b = Vector.Zero(Points);
 
-            if (IsEnableIntercept) {
+            if (EnableIntercept) {
                 for (int i = 0; i < Points; i++) {
                     double x = X[i];
                     b[i] = Y[i];
