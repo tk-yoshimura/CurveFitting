@@ -7,14 +7,14 @@ namespace CurveFitting {
     public class LinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public LinearFittingMethod(double[] xs, double[] ys, bool is_enable_section)
-            : base(xs, ys, is_enable_section ? 2 : 1) {
+        public LinearFittingMethod(double[] xs, double[] ys, bool is_enable_intercept)
+            : base(xs, ys, is_enable_intercept ? 2 : 1) {
 
-            IsEnableSection = is_enable_section;
+            IsEnableIntercept = is_enable_intercept;
         }
 
         /// <summary>y切片を有効にするか</summary>
-        public bool IsEnableSection { get; private set; }
+        public bool IsEnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector parameters) {
@@ -25,7 +25,7 @@ namespace CurveFitting {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            if (IsEnableSection) {
+            if (IsEnableIntercept) {
                 return parameters[0] + parameters[1] * x;
             }
             else {
@@ -35,7 +35,7 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            if (IsEnableSection) {
+            if (IsEnableIntercept) {
                 double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = Points;
 
                 for (int i = 0; i < Points; i++) {

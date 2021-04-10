@@ -8,14 +8,14 @@ namespace CurveFitting {
     public class RobustLinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFittingMethod(double[] xs, double[] ys, bool is_enable_section)
-            : base(xs, ys, is_enable_section ? 2 : 1) {
+        public RobustLinearFittingMethod(double[] xs, double[] ys, bool is_enable_intercept)
+            : base(xs, ys, is_enable_intercept ? 2 : 1) {
 
-            IsEnableSection = is_enable_section;
+            IsEnableIntercept = is_enable_intercept;
         }
 
         /// <summary>y切片を有効にするか</summary>
-        public bool IsEnableSection { get; private set; }
+        public bool IsEnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector parameters) {
@@ -26,7 +26,7 @@ namespace CurveFitting {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            if (IsEnableSection) {
+            if (IsEnableIntercept) {
                 return parameters[0] + parameters[1] * x;
             }
             else {
@@ -47,7 +47,7 @@ namespace CurveFitting {
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedLinearFittingMethod(xs, ys, weights, IsEnableSection);
+                fitting = new WeightedLinearFittingMethod(xs, ys, weights, IsEnableIntercept);
 
                 coef = fitting.ExecuteFitting();
 
