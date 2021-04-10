@@ -1,5 +1,5 @@
-﻿using System;
-using Algebra;
+﻿using Algebra;
+using System;
 
 namespace CurveFitting {
 

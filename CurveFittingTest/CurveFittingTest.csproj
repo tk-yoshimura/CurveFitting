@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>false</Deterministic>
     <IsPackable>false</IsPackable>
@@ -16,10 +16,10 @@
 
   <ItemGroup>
     <Reference Include="Algebra">
-      <HintPath>..\CurveFitting\bin\Debug\netstandard2.0\Algebra.dll</HintPath>
+      <HintPath>..\import\Algebra.dll</HintPath>
     </Reference>
     <Reference Include="CurveFitting">
-      <HintPath>..\CurveFitting\bin\Debug\netstandard2.0\CurveFitting.dll</HintPath>
+      <HintPath>..\CurveFitting\bin\Release\net5.0\CurveFitting.dll</HintPath>
     </Reference>
   </ItemGroup>
 

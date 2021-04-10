@@ -1,10 +1,10 @@
-﻿using System;
-using Algebra;
+﻿using Algebra;
+using System;
 
 namespace CurveFitting {
 
-	/// <summary>ロバスト多項式フィッティング</summary>
-	public class RobustPolynomialFittingMethod : FittingMethod {
+    /// <summary>ロバスト多項式フィッティング</summary>
+    public class RobustPolynomialFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
         public RobustPolynomialFittingMethod(FittingData[] data_list, int degree, bool is_enable_section)
@@ -24,10 +24,10 @@ namespace CurveFitting {
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector coefficients) {
-            if(IsEnableSection) {
+            if (IsEnableSection) {
                 double y = coefficients[0], ploy_x = 1;
 
-                for(int i = 1; i < coefficients.Dim; i++) {
+                for (int i = 1; i < coefficients.Dim; i++) {
                     ploy_x *= x;
                     y += ploy_x * coefficients[i];
                 }
@@ -37,7 +37,7 @@ namespace CurveFitting {
             else {
                 double y = 0, ploy_x = 1;
 
-                for(int i = 0; i < coefficients.Dim; i++) {
+                for (int i = 0; i < coefficients.Dim; i++) {
                     ploy_x *= x;
                     y += ploy_x * coefficients[i];
                 }
@@ -54,18 +54,18 @@ namespace CurveFitting {
             Vector err, coef = null;
             WeightedPolynomialFittingMethod fitting;
 
-            for(int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) {
                 weight_list[i] = 1;
             }
 
-            while(converge_times > 0) {
+            while (converge_times > 0) {
                 fitting = new WeightedPolynomialFittingMethod(data_list, weight_list, Degree, IsEnableSection);
-                
+
                 coef = fitting.ExecuteFitting();
 
                 err = fitting.Error(coef);
 
-                for(int i = 0; i < n; i++) {
+                for (int i = 0; i < n; i++) {
                     err_list[i] = Math.Abs(err[i]);
                 }
 
@@ -74,14 +74,14 @@ namespace CurveFitting {
                 Array.Sort(sort_err_list);
 
                 err_threshold = sort_err_list[n / 2] * 1.25;
-                if(err_threshold <= 1e-14) {
+                if (err_threshold <= 1e-14) {
                     break;
                 }
 
                 inv_err = 1 / err_threshold;
 
-                for(int i = 0; i < n; i++) {
-                    if(err_list[i] >= err_threshold) {
+                for (int i = 0; i < n; i++) {
+                    if (err_list[i] >= err_threshold) {
                         weight_list[i] = 0;
                     }
                     else {

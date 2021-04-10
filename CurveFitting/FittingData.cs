@@ -1,5 +1,4 @@
-﻿
-namespace CurveFitting {
+﻿namespace CurveFitting {
 
     /// <summary>フィッティング関数真値</summary>
     public struct FittingData {

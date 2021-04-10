@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Algebra;
+﻿using Algebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
     [TestClass()]
@@ -8,11 +8,11 @@ namespace CurveFitting.Tests {
         public void ExecuteFittingTest() {
             FittingData[] data_list = { new FittingData(2, 1), new FittingData(3, 8) };
 
-            LinearFittingMethod fitting1 = new LinearFittingMethod(data_list, true);
-            LinearFittingMethod fitting2 = new LinearFittingMethod(data_list, false);
+            LinearFittingMethod fitting1 = new(data_list, true);
+            LinearFittingMethod fitting2 = new(data_list, false);
 
-            Assert.AreEqual(fitting1.ExecuteFitting(), new Vector(-13, 7));
-            Assert.AreEqual(fitting2.ExecuteFitting(), new Vector(2));
+            Assert.AreEqual(new Vector(-13, 7), fitting1.ExecuteFitting());
+            Assert.AreEqual(new Vector(2), fitting2.ExecuteFitting());
         }
     }
 }

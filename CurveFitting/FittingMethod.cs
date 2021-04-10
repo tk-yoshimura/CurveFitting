@@ -1,22 +1,22 @@
-﻿using System;
-using Algebra;
+﻿using Algebra;
+using System;
 
 namespace CurveFitting {
-	/// <summary>フィッティング基本クラス</summary>
-	public abstract class FittingMethod {
+    /// <summary>フィッティング基本クラス</summary>
+    public abstract class FittingMethod {
 
         /// <summary>フィッティング対象のデータ</summary>
         protected readonly FittingData[] data_list;
 
         /// <summary>コンストラクタ</summary>
         public FittingMethod(FittingData[] data_list, int parameters) {
-            if(data_list == null) {
+            if (data_list is null) {
                 throw new ArgumentNullException(nameof(data_list));
             }
-            if(data_list.Length < 1) {
+            if (data_list.Length < 1) {
                 throw new ArgumentException(nameof(data_list));
             }
-            if(parameters < 1) {
+            if (parameters < 1) {
                 throw new ArgumentException(nameof(parameters));
             }
 
@@ -31,16 +31,16 @@ namespace CurveFitting {
 
         /// <summary>誤差二乗和</summary>
         public double Cost(Vector parameters) {
-            if(parameters == null) {
+            if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if(parameters.Dim != ParametersCount) {
+            if (parameters.Dim != ParametersCount) {
                 throw new ArgumentException(nameof(parameters));
             }
 
             Vector errors = Error(parameters);
             double cost = 0;
-            for(int i = 0; i < errors.Dim; i++) {
+            for (int i = 0; i < errors.Dim; i++) {
                 cost += errors[i] * errors[i];
             }
 
@@ -49,16 +49,16 @@ namespace CurveFitting {
 
         /// <summary>誤差</summary>
         public Vector Error(Vector parameters) {
-            if(parameters == null) {
+            if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if(parameters.Dim != ParametersCount) {
+            if (parameters.Dim != ParametersCount) {
                 throw new ArgumentException(nameof(parameters));
             }
 
             Vector errors = Vector.Zero(data_list.Length);
 
-            for(int i = 0; i < data_list.Length; i++) {
+            for (int i = 0; i < data_list.Length; i++) {
                 errors[i] = FittingValue(data_list[i].X, parameters) - data_list[i].Y;
             }
 

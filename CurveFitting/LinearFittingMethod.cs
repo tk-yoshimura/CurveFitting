@@ -1,5 +1,5 @@
-﻿using System;
-using Algebra;
+﻿using Algebra;
+using System;
 
 namespace CurveFitting {
 
@@ -7,7 +7,9 @@ namespace CurveFitting {
     public class LinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public LinearFittingMethod(FittingData[] data_list, bool is_enable_section) : base(data_list, is_enable_section ? 2 : 1) {
+        public LinearFittingMethod(FittingData[] data_list, bool is_enable_section)
+            : base(data_list, is_enable_section ? 2 : 1) {
+
             IsEnableSection = is_enable_section;
         }
 
@@ -16,14 +18,14 @@ namespace CurveFitting {
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector parameters) {
-            if(parameters == null) {
+            if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if(parameters.Dim != ParametersCount) {
+            if (parameters.Dim != ParametersCount) {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            if(IsEnableSection) {
+            if (IsEnableSection) {
                 return parameters[0] + parameters[1] * x;
             }
             else {
@@ -33,11 +35,11 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            if(IsEnableSection) {
+            if (IsEnableSection) {
                 FittingData data;
                 double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = data_list.Length;
 
-                for(int i = 0; i < data_list.Length; i++) {
+                for (int i = 0; i < data_list.Length; i++) {
                     data = data_list[i];
                     sum_x += data.X;
                     sum_y += data.Y;
@@ -55,7 +57,7 @@ namespace CurveFitting {
                 FittingData data;
                 double sum_sq_x = 0, sum_xy = 0;
 
-                for(int i = 0; i < data_list.Length; i++) {
+                for (int i = 0; i < data_list.Length; i++) {
                     data = data_list[i];
                     sum_sq_x += data.X * data.X;
                     sum_xy += data.X * data.Y;

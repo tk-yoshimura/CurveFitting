@@ -1,12 +1,14 @@
 ﻿using Algebra;
 
 namespace CurveFitting {
-	/// <summary>Levenberg-MarguardtMethod法</summary>
-	public class LevenbergMarquardtMethod : FittingMethod{
+    /// <summary>Levenberg-MarguardtMethod法</summary>
+    public class LevenbergMarquardtMethod : FittingMethod {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public LevenbergMarquardtMethod(FittingData[] data_list, FittingFunction func) : base(data_list, func.ParametersCount){
+        public LevenbergMarquardtMethod(FittingData[] data_list, FittingFunction func)
+            : base(data_list, func.ParametersCount) {
+
             this.func = func;
         }
 
@@ -22,14 +24,14 @@ namespace CurveFitting {
 
             double lambda = lambda_init;
 
-            for(int j = 0; j < loop; j++) {
+            for (int j = 0; j < loop; j++) {
                 errors = Error(parameters);
                 jacobian = Jacobian(parameters);
                 jacobian_transpose = jacobian.Transpose;
 
                 dparam = (jacobian_transpose * jacobian + lambda * Matrix.Identity(ParametersCount)).Inverse * jacobian_transpose * errors;
 
-                if(!Vector.IsValid(dparam)) {
+                if (!Vector.IsValid(dparam)) {
                     break;
                 }
 
@@ -44,13 +46,13 @@ namespace CurveFitting {
         /// <summary>ヤコビアン行列</summary>
         private Matrix Jacobian(Vector parameters) {
             FittingData data;
-            Matrix jacobian = new Matrix(data_list.Length, func.ParametersCount);
+            Matrix jacobian = new(data_list.Length, func.ParametersCount);
 
-            for(int i = 0, j; i < data_list.Length; i++) {
+            for (int i = 0, j; i < data_list.Length; i++) {
                 data = data_list[i];
                 Vector df = func.DiffF(data.X, parameters);
 
-                for(j = 0; j < parameters.Dim; j++) {
+                for (j = 0; j < parameters.Dim; j++) {
                     jacobian[i, j] = df[j];
                 }
             }

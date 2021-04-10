@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurveFitting", "CurveFitting\CurveFitting.csproj", "{D731F749-C037-4487-9A94-94DC58F611F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurveFitting", "CurveFitting\CurveFitting.csproj", "{D731F749-C037-4487-9A94-94DC58F611F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurveFittingTest", "CurveFittingTest\CurveFittingTest.csproj", "{8F81C8FD-74B0-49DA-94B5-D572314FF5BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurveFittingTest", "CurveFittingTest\CurveFittingTest.csproj", "{8F81C8FD-74B0-49DA-94B5-D572314FF5BF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D731F749-C037-4487-9A94-94DC58F611F0} = {D731F749-C037-4487-9A94-94DC58F611F0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

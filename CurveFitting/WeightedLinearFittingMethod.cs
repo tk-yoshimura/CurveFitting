@@ -1,5 +1,5 @@
-﻿using System;
-using Algebra;
+﻿using Algebra;
+using System;
 
 namespace CurveFitting {
 
@@ -9,19 +9,21 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedLinearFittingMethod(FittingData[] data_list, double[] weight_list, bool is_enable_section) : base(data_list, is_enable_section ? 2 : 1) {
+        public WeightedLinearFittingMethod(FittingData[] data_list, double[] weight_list, bool is_enable_section)
+            : base(data_list, is_enable_section ? 2 : 1) {
+
             IsEnableSection = is_enable_section;
 
-            if(weight_list == null) {
+            if (weight_list is null) {
                 throw new ArgumentNullException(nameof(weight_list));
             }
 
-            if(data_list.Length != weight_list.Length) {
+            if (data_list.Length != weight_list.Length) {
                 throw new ArgumentException($"{nameof(data_list)},{nameof(weight_list)}");
             }
 
-            foreach(var weight in weight_list) {
-                if(!(weight >= 0)) {
+            foreach (var weight in weight_list) {
+                if (!(weight >= 0)) {
                     throw new ArgumentException(nameof(weight_list));
                 }
             }
@@ -34,16 +36,16 @@ namespace CurveFitting {
 
         /// <summary>重み付き誤差二乗和</summary>
         public double WeightedCost(Vector parameters) {
-            if(parameters == null) {
+            if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if(parameters.Dim != ParametersCount) {
+            if (parameters.Dim != ParametersCount) {
                 throw new ArgumentException(nameof(parameters));
             }
 
             Vector errors = Error(parameters);
             double cost = 0;
-            for(int i = 0; i < errors.Dim; i++) {
+            for (int i = 0; i < errors.Dim; i++) {
                 cost += weight_list[i] * errors[i] * errors[i];
             }
 
@@ -52,14 +54,14 @@ namespace CurveFitting {
 
         /// <summary>フィッティング値</summary>
         public override double FittingValue(double x, Vector parameters) {
-            if(parameters == null) {
+            if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
-            if(parameters.Dim != ParametersCount) {
+            if (parameters.Dim != ParametersCount) {
                 throw new ArgumentException(nameof(parameters));
             }
 
-            if(IsEnableSection) {
+            if (IsEnableSection) {
                 return parameters[0] + parameters[1] * x;
             }
             else {
@@ -69,15 +71,15 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            if(weight_list == null) {
+            if (weight_list is null) {
                 throw new InvalidOperationException();
             }
 
-            if(IsEnableSection) {
+            if (IsEnableSection) {
                 FittingData data;
                 double w, sum_w = 0, sum_wx = 0, sum_wy = 0, sum_wxx = 0, sum_wxy = 0;
 
-                for(int i = 0; i < data_list.Length; i++) {
+                for (int i = 0; i < data_list.Length; i++) {
                     data = data_list[i];
                     w = weight_list[i];
                     sum_w += w;
@@ -97,7 +99,7 @@ namespace CurveFitting {
                 FittingData data;
                 double w, sum_wxx = 0, sum_wxy = 0;
 
-                for(int i = 0; i < data_list.Length; i++) {
+                for (int i = 0; i < data_list.Length; i++) {
                     data = data_list[i];
                     w = weight_list[i];
                     sum_wxx += w * data.X * data.X;
