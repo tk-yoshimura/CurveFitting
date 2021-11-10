@@ -13,9 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Algebra">
-      <HintPath>..\import\Algebra.dll</HintPath>
-    </Reference>
+    <PackageReference Include="TYoshimura.Algebra" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

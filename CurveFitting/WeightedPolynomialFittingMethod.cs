@@ -20,12 +20,12 @@ namespace CurveFitting {
             }
 
             if (Points != weights.Length) {
-                throw new ArgumentException($"{nameof(weights)}");
+                throw new ArgumentException(null, $"{nameof(weights)}");
             }
 
             foreach (var weight in weights) {
                 if (!(weight >= 0)) {
-                    throw new ArgumentException(nameof(weights));
+                    throw new ArgumentException(null, nameof(weights));
                 }
             }
 
@@ -46,7 +46,7 @@ namespace CurveFitting {
                 throw new ArgumentNullException(nameof(coefficients));
             }
             if (coefficients.Dim != Parameters) {
-                throw new ArgumentException(nameof(coefficients));
+                throw new ArgumentException(null, nameof(coefficients));
             }
 
             Vector errors = Error(coefficients);

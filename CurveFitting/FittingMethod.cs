@@ -30,7 +30,7 @@ namespace CurveFitting {
                 throw new ArgumentException($"{nameof(xs.Length)}, {nameof(ys.Length)}");
             }
             if (parameters < 1) {
-                throw new ArgumentException(nameof(parameters));
+                throw new ArgumentException(null, nameof(parameters));
             }
 
             this.X = xs;
@@ -45,7 +45,7 @@ namespace CurveFitting {
                 throw new ArgumentNullException(nameof(parameters));
             }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(nameof(parameters));
+                throw new ArgumentException(null, nameof(parameters));
             }
 
             Vector errors = Error(parameters);
@@ -63,7 +63,7 @@ namespace CurveFitting {
                 throw new ArgumentNullException(nameof(parameters));
             }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(nameof(parameters));
+                throw new ArgumentException(null, nameof(parameters));
             }
 
             Vector errors = Vector.Zero(Points);

@@ -23,7 +23,7 @@ namespace CurveFitting {
                 throw new ArgumentNullException(nameof(parameters));
             }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(nameof(parameters));
+                throw new ArgumentException(null, nameof(parameters));
             }
 
             if (EnableIntercept) {
