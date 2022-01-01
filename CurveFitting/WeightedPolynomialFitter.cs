@@ -8,10 +8,10 @@ namespace CurveFitting {
     /// <summary>重み付き多項式フィッティング</summary>
     public class WeightedPolynomialFitter : Fitter {
 
-        readonly double[] weight_list;
+        readonly IReadOnlyList<double> weights;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedPolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, int degree, bool enable_intercept)
+        public WeightedPolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, IReadOnlyList<double> weights, int degree, bool enable_intercept)
             : base(xs, ys, checked(degree + (enable_intercept ? 1 : 0))) {
 
             this.Degree = degree;
@@ -21,7 +21,7 @@ namespace CurveFitting {
                 throw new ArgumentNullException(nameof(weights));
             }
 
-            if (Points != weights.Length) {
+            if (Points != weights.Count) {
                 throw new ArgumentException(null, $"{nameof(weights)}");
             }
 
@@ -31,7 +31,7 @@ namespace CurveFitting {
                 }
             }
 
-            this.weight_list = (double[])weights.Clone();
+            this.weights = weights;
         }
 
         /// <summary>次数</summary>
@@ -54,7 +54,7 @@ namespace CurveFitting {
             Vector errors = Error(coefficients);
             ddouble cost = 0;
             for (int i = 0; i < errors.Dim; i++) {
-                cost += weight_list[i] * errors[i] * errors[i];
+                cost += weights[i] * errors[i] * errors[i];
             }
 
             return cost;
@@ -118,7 +118,7 @@ namespace CurveFitting {
 
             for (int i = 0; i < Points; i++) {
                 for (int j = 0; j < m_transpose.Rows; j++) {
-                    m_transpose[j, i] *= weight_list[i];
+                    m_transpose[j, i] *= weights[i];
                 }
             }
 

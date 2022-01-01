@@ -6,179 +6,128 @@ using System.Collections.Generic;
 namespace CurveFitting {
     /// <summary>有理関数フィッティング</summary>
     public class RationalFitter : Fitter {
-        readonly FittingFunction func;
+        readonly Func<ddouble, Vector, Vector, ddouble> func;
 
-        /// <summary>y切片を有効にするか</summary>
-        public bool EnableIntercept { get; private set; }
-
-        /// <summary>分母部の係数の数</summary>
+        /// <summary>分子部の係数の最大次数</summary>
         public int M { get; private set; }
 
-        /// <summary>分子部の係数の数</summary>
+        /// <summary>分母部の係数の最大次数</summary>
         public int N { get; private set; }
 
-        public RationalFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int m, int n, bool enable_intercept)
-            : base(xs, ys, checked(m + n + (enable_intercept ? 1 : 0))) {
+        public RationalFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int m, int n)
+            : base(xs, ys, checked(m + n + 2)) {
 
             if (m < 1 || n < 1) {
                 throw new ArgumentOutOfRangeException($"{nameof(m)},{nameof(n)}");
             }
 
-            this.M = m + (enable_intercept ? 1 : 0);
+            this.M = m;
             this.N = n;
 
-            if (enable_intercept) {
-                ddouble f(ddouble x, Vector parameter) {
-                    ddouble sm = parameter[M - 1], sn = parameter[Parameters - 1];
-                    for (int i = M - 2; i >= 0; i--) {
-                        sm = sm * x + parameter[i];
-                    }
-                    for (int i = Parameters - 2; i >= M; i--) {
-                        sn = sn * x + parameter[i];
-                    }
-                    sn = sn * x + 1;
-
-                    ddouble y = sm / sn;
-
-                    return y;
+            ddouble f(ddouble x, Vector numer_param, Vector denom_param) {
+                ddouble sm = numer_param[M], sn = denom_param[N];
+                for (int i = M - 1; i >= 0; i--) {
+                    sm = sm * x + numer_param[i];
+                }
+                for (int i = N - 1; i >= 0; i--) {
+                    sn = sn * x + denom_param[i];
                 }
 
-                Vector df(ddouble x, Vector parameter) {
-                    ddouble sm = parameter[M - 1], sn = parameter[Parameters - 1];
-                    for (int i = M - 2; i >= 0; i--) {
-                        sm = sm * x + parameter[i];
-                    }
-                    for (int i = Parameters - 2; i >= M; i--) {
-                        sn = sn * x + parameter[i];
-                    }
-                    sn = sn * x + 1;
+                ddouble y = sm / sn;
 
-                    ddouble u = 1d / sn, v = -x * sm / (sn * sn);
-
-                    ddouble[] d = new ddouble[Parameters];
-
-                    for (int i = 0; i < M; i++) {
-                        d[i] = u;
-                        if (i < M - 1) {
-                            u *= x;
-                        }
-                    }
-
-                    for (int i = 0; i < N; i++) {
-                        d[M + i] = v;
-                        if (i < N - 1) {
-                            v *= x;
-                        }
-                    }
-
-                    return new(d);
-                }
-
-                this.func = new FittingFunction(Parameters, f, df);
+                return y;
             }
-            else {
-                ddouble f(ddouble x, Vector parameter) {
-                    ddouble sm = parameter[M - 1], sn = parameter[Parameters - 1];
-                    for (int i = M - 2; i >= 0; i--) {
-                        sm = sm * x + parameter[i];
-                    }
-                    for (int i = Parameters - 2; i >= M; i--) {
-                        sn = sn * x + parameter[i];
-                    }
-                    sm = sm * x;
-                    sn = sn * x + 1;
 
-                    ddouble y = sm / sn;
-
-                    return y;
-                }
-
-                Vector df(ddouble x, Vector parameter) {
-                    ddouble sm = parameter[M - 1], sn = parameter[Parameters - 1];
-                    for (int i = M - 2; i >= 0; i--) {
-                        sm = sm * x + parameter[i];
-                    }
-                    for (int i = Parameters - 2; i >= M; i--) {
-                        sn = sn * x + parameter[i];
-                    }
-                    sm = sm * x;
-                    sn = sn * x + 1;
-
-                    ddouble u = x / sn, v = -x * sm / (sn * sn);
-
-                    ddouble[] d = new ddouble[Parameters];
-
-                    for (int i = 0; i < M; i++) {
-                        d[i] = u;
-                        if (i < M - 1) {
-                            u *= x;
-                        }
-                    }
-
-                    for (int i = 0; i < N; i++) {
-                        d[M + i] = v;
-                        if (i < N - 1) {
-                            v *= x;
-                        }
-                    }
-
-                    return new(d);
-                }
-
-                this.func = new FittingFunction(Parameters, f, df);
-            }
+            this.func = f;
         }
 
         public override ddouble FittingValue(ddouble x, Vector parameters) {
-            return func.F(x, parameters);
+            throw new NotImplementedException();
+        }
+
+        public ddouble FittingValue(ddouble x, Vector numer_parameters, Vector denom_parameters) {
+            return func(x, numer_parameters, denom_parameters);
+        }
+
+        public ddouble[] FittingValue(IReadOnlyList<ddouble> xs, Vector numer_parameters, Vector denom_parameters) {
+            List<ddouble> ys = new();
+
+            for (int i = 0; i < xs.Count; i++) {
+                ys.Add(FittingValue(xs[i], numer_parameters, denom_parameters));
+            }
+
+            return ys.ToArray();
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(double lambda_init = 1, double lambda_decay = 0.995, int iter = 128) {
-            LevenbergMarquardtFitter fitter = new(X, Y, func);
-            Vector param = fitter.ExecuteFitting(InitialParameter(), lambda_init, lambda_decay, iter);
+        public (Vector numer, Vector denom) ExecuteFitting(int iter = 128) {
+            ddouble[] vs = new ddouble[Points];
+            double[] ws = new double[Points];
+            (Vector numer, Vector denom) = InitialParameter();
+            
+            for (int j = 0; j < iter; j++) {
+                ddouble[] new_ys = FittingValue(X, numer, denom);
 
-            return param;
+                for (int i = 0; i < Points; i++) {
+                    ddouble x = X[i], y = Y[i];
+
+                    ddouble s = numer[M];
+                    for (int k = M - 1; k >= 0; k--) {
+                        s = s * x + numer[k];
+                    }
+
+                    ddouble v = s / y;
+
+                    vs[i] = ddouble.IsFinite(v) ? v : 0;
+                    ws[i] = ddouble.IsFinite(v) ? 1 : 0;
+                }
+
+                WeightedPolynomialFitter denom_fitter = new(X, vs, ws, N, enable_intercept: true);
+                denom = (denom + denom_fitter.ExecuteFitting() * 3) / 4;
+
+                new_ys = denom_fitter.FittingValue(X, denom);
+
+                new_ys = FittingValue(X, numer, denom);
+
+                for (int i = 0; i < Points; i++) {
+                    ddouble x = X[i], y = Y[i];
+
+                    ddouble s = denom[N];
+                    for (int k = N - 1; k >= 0; k--) {
+                        s = s * x + denom[k];
+                    }
+
+                    ddouble v = y / s;
+
+                    vs[i] = ddouble.IsFinite(v) ? v : 0;
+                    ws[i] = ddouble.IsFinite(v) ? 1 : 0;
+                }
+
+                WeightedPolynomialFitter numer_fitter = new(X, vs, ws, M, enable_intercept: true);
+                numer = (numer + numer_fitter.ExecuteFitting() * 3) / 4;
+
+                new_ys = numer_fitter.FittingValue(X, numer);
+
+                Console.WriteLine("next");
+            }
+
+            ddouble n = denom[0];
+            if (n != 0) {
+                numer /= n;
+                denom /= n;
+            }
+
+            return (numer, denom);
         }
 
         /// <summary>初期パラメータの決定</summary>
-        private Vector InitialParameter() {
-            PolynomialFitter poly_fitter = new(X, Y, M + N, enable_intercept: true);
-            Vector c = poly_fitter.ExecuteFitting();
+        private (Vector numer, Vector denom) InitialParameter() {
+            PolynomialFitter poly_fitter = new(X, Y, M, enable_intercept: true);
+            Vector numer = poly_fitter.ExecuteFitting();
+            Vector denom = new Vector(N + 1);
+            denom[0] = 1;
 
-            int k = M + N;
-
-            Matrix a = new(k, k);
-            Vector u = new(k);
-
-            for (int i = 0; i < M; i++) {
-                a[i, i] = 1;
-            }
-
-            for (int i = M; i < k; i++) {
-                for (int j = i - M, r = 0; j < k; j++, r++) {
-                    a[j, i] = -c[r];
-                }
-            }
-
-            for (int i = 0; i < k; i++) {
-                u[i] = c[i + 1];
-            }
-
-            Vector v = a.Inverse * u;
-
-            if (!EnableIntercept) {
-                return v;
-            }
-            else {
-                Vector p = new Vector(k + 1);
-                p[0] = c[0];
-                for (int i = 0; i < k; i++) {
-                    p[i + 1] = v[i];
-                }
-
-                return p;
-            }
+            return (numer, denom);
         }
     }
 }

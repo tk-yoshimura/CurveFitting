@@ -25,22 +25,21 @@ namespace CurveFitting {
         /// <summary>フィッティング値</summary>
         public override ddouble FittingValue(ddouble x, Vector coefficients) {
             if (EnableIntercept) {
-                ddouble y = coefficients[0], ploy_x = 1;
+                ddouble y = coefficients[coefficients.Dim - 1];
 
-                for (int i = 1; i < coefficients.Dim; i++) {
-                    ploy_x *= x;
-                    y += ploy_x * coefficients[i];
+                for (int i = coefficients.Dim - 2; i >= 0; i--) {
+                    y = y * x + coefficients[i];
                 }
 
                 return y;
             }
             else {
-                ddouble y = 0, ploy_x = 1;
+                ddouble y = coefficients[coefficients.Dim - 1];
 
-                for (int i = 0; i < coefficients.Dim; i++) {
-                    ploy_x *= x;
-                    y += ploy_x * coefficients[i];
+                for (int i = coefficients.Dim - 2; i >= 0; i--) {
+                    y = y * x + coefficients[i];
                 }
+                y *= x;
 
                 return y;
             }

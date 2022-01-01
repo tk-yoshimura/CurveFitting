@@ -16,17 +16,13 @@ namespace CurveFitting.Tests {
                 ys[i] = (3 * x + 4 * x * x + 5 * x * x * x) / (1 + 2 * x + 6 * x * x + 7 * x * x * x + 8 * x * x * x * x);
             }
 
-            RationalFitter fitting1 = new(xs, ys, 3, 4, enable_intercept: true);
-            RationalFitter fitting2 = new(xs, ys, 3, 4, enable_intercept: false);
+            RationalFitter fitting = new(xs, ys, 3, 4);
 
-            Vector p1 = fitting1.ExecuteFitting();
-            Vector p2 = fitting2.ExecuteFitting();
+            (Vector n, Vector d) = fitting.ExecuteFitting();
 
-            ddouble[] ys1 = fitting1.FittingValue(xs, p1);
-            ddouble[] ys2 = fitting2.FittingValue(xs, p2);
+            ddouble[] ys_approx = fitting.FittingValue(xs, n, d);
 
-            Assert.IsTrue((new Vector(ys) - new Vector(ys1)).Norm < 2.5e-2);
-            Assert.IsTrue((new Vector(ys) - new Vector(ys2)).Norm < 2.5e-2);
+            Assert.IsTrue((new Vector(ys) - new Vector(ys_approx)).Norm < 2.5e-2);
         }
     }
 }
