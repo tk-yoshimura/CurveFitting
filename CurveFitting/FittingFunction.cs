@@ -1,15 +1,16 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
 
 namespace CurveFitting {
 
     /// <summary>フィッティング関数</summary>
     public class FittingFunction {
-        readonly Func<double, Vector, double> f;
-        readonly Func<double, Vector, Vector> df;
+        readonly Func<ddouble, Vector, ddouble> f;
+        readonly Func<ddouble, Vector, Vector> df;
 
         /// <summary>コンストラクタ</summary>
-        public FittingFunction(int parameters, Func<double, Vector, double> f, Func<double, Vector, Vector> df) {
+        public FittingFunction(int parameters, Func<ddouble, Vector, ddouble> f, Func<ddouble, Vector, Vector> df) {
             this.Parameters = parameters;
             this.f = f;
             this.df = df;
@@ -21,12 +22,12 @@ namespace CurveFitting {
         }
 
         /// <summary>関数値</summary>
-        public double F(double x, Vector v) {
+        public ddouble F(ddouble x, Vector v) {
             return f(x, v);
         }
 
         /// <summary>関数勾配</summary>
-        public Vector DiffF(double x, Vector v) {
+        public Vector DiffF(ddouble x, Vector v) {
             return df(x, v);
         }
     }

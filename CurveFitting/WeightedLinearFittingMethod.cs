@@ -1,5 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
@@ -9,7 +11,7 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedLinearFittingMethod(double[] xs, double[] ys, double[] weights, bool enable_intercept)
+        public WeightedLinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;
@@ -35,7 +37,7 @@ namespace CurveFitting {
         public bool EnableIntercept { get; private set; }
 
         /// <summary>重み付き誤差二乗和</summary>
-        public double WeightedCost(Vector parameters) {
+        public ddouble WeightedCost(Vector parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -44,7 +46,7 @@ namespace CurveFitting {
             }
 
             Vector errors = Error(parameters);
-            double cost = 0;
+            ddouble cost = 0;
             for (int i = 0; i < errors.Dim; i++) {
                 cost += weight_list[i] * errors[i] * errors[i];
             }
@@ -53,7 +55,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector parameters) {
+        public override ddouble FittingValue(ddouble x, Vector parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -76,10 +78,10 @@ namespace CurveFitting {
             }
 
             if (EnableIntercept) {
-                double w, sum_w = 0, sum_wx = 0, sum_wy = 0, sum_wxx = 0, sum_wxy = 0;
+                ddouble w, sum_w = 0, sum_wx = 0, sum_wy = 0, sum_wxx = 0, sum_wxy = 0;
 
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i], y = Y[i];
+                    ddouble x = X[i], y = Y[i];
 
                     w = weight_list[i];
                     sum_w += w;
@@ -89,17 +91,17 @@ namespace CurveFitting {
                     sum_wxy += w * x * y;
                 }
 
-                double r = 1 / (sum_wx * sum_wx - sum_w * sum_wxx);
-                double a = (sum_wx * sum_wxy - sum_wxx * sum_wy) * r;
-                double b = (sum_wx * sum_wy - sum_w * sum_wxy) * r;
+                ddouble r = 1 / (sum_wx * sum_wx - sum_w * sum_wxx);
+                ddouble a = (sum_wx * sum_wxy - sum_wxx * sum_wy) * r;
+                ddouble b = (sum_wx * sum_wy - sum_w * sum_wxy) * r;
 
                 return new Vector(a, b);
             }
             else {
-                double w, sum_wxx = 0, sum_wxy = 0;
+                ddouble w, sum_wxx = 0, sum_wxy = 0;
 
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i], y = Y[i];
+                    ddouble x = X[i], y = Y[i];
 
                     w = weight_list[i];
                     sum_wxx += w * x * x;

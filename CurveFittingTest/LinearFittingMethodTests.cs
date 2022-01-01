@@ -1,4 +1,5 @@
 ﻿using Algebra;
+using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
@@ -6,13 +7,13 @@ namespace CurveFitting.Tests {
     public class LinearFittingMethodTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            double[] xs = { 2, 3 }, ys = { 1, 8 };
+            ddouble[] xs = { 2, 3 }, ys = { 1, 8 };
 
             LinearFittingMethod fitting1 = new(xs, ys, enable_intercept: true);
             LinearFittingMethod fitting2 = new(xs, ys, enable_intercept: false);
 
             Assert.AreEqual(new Vector(-13, 7), fitting1.ExecuteFitting());
-            Assert.AreEqual(new Vector(2), fitting2.ExecuteFitting());
+            Assert.AreEqual(new Vector(2d), fitting2.ExecuteFitting());
         }
     }
 }

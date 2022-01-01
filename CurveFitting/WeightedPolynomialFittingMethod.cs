@@ -1,5 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
@@ -9,7 +11,7 @@ namespace CurveFitting {
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedPolynomialFittingMethod(double[] xs, double[] ys, double[] weights, int degree, bool enable_intercept)
+        public WeightedPolynomialFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, int degree, bool enable_intercept)
             : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
@@ -41,7 +43,7 @@ namespace CurveFitting {
         public bool EnableIntercept { get; set; }
 
         /// <summary>重み付き誤差二乗和</summary>
-        public double WeightedCost(Vector coefficients) {
+        public ddouble WeightedCost(Vector coefficients) {
             if (coefficients is null) {
                 throw new ArgumentNullException(nameof(coefficients));
             }
@@ -50,7 +52,7 @@ namespace CurveFitting {
             }
 
             Vector errors = Error(coefficients);
-            double cost = 0;
+            ddouble cost = 0;
             for (int i = 0; i < errors.Dim; i++) {
                 cost += weight_list[i] * errors[i] * errors[i];
             }
@@ -59,9 +61,9 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector coefficients) {
+        public override ddouble FittingValue(ddouble x, Vector coefficients) {
             if (EnableIntercept) {
-                double y = coefficients[0], ploy_x = 1;
+                ddouble y = coefficients[0], ploy_x = 1;
 
                 for (int i = 1; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -71,7 +73,7 @@ namespace CurveFitting {
                 return y;
             }
             else {
-                double y = 0, ploy_x = 1;
+                ddouble y = 0, ploy_x = 1;
 
                 for (int i = 0; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -89,7 +91,7 @@ namespace CurveFitting {
 
             if (EnableIntercept) {
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i];
+                    ddouble x = X[i];
                     b[i] = Y[i];
 
                     m[i, 0] = 1;
@@ -101,7 +103,7 @@ namespace CurveFitting {
             }
             else {
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i];
+                    ddouble x = X[i];
                     b[i] = Y[i];
 
                     m[i, 0] = x;

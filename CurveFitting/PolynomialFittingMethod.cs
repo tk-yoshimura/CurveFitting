@@ -1,11 +1,13 @@
 ﻿using Algebra;
+using DoubleDouble;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
     /// <summary>多項式フィッティング</summary>
     public class PolynomialFittingMethod : FittingMethod {
         /// <summary>コンストラクタ</summary>
-        public PolynomialFittingMethod(double[] xs, double[] ys, int degree, bool enable_intercept)
+        public PolynomialFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
             : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
@@ -21,9 +23,9 @@ namespace CurveFitting {
         public bool EnableIntercept { get; set; }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector coefficients) {
+        public override ddouble FittingValue(ddouble x, Vector coefficients) {
             if (EnableIntercept) {
-                double y = coefficients[0], ploy_x = 1;
+                ddouble y = coefficients[0], ploy_x = 1;
 
                 for (int i = 1; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -33,7 +35,7 @@ namespace CurveFitting {
                 return y;
             }
             else {
-                double y = 0, ploy_x = 1;
+                ddouble y = 0, ploy_x = 1;
 
                 for (int i = 0; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -51,7 +53,7 @@ namespace CurveFitting {
 
             if (EnableIntercept) {
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i];
+                    ddouble x = X[i];
                     b[i] = Y[i];
 
                     m[i, 0] = 1;
@@ -63,7 +65,7 @@ namespace CurveFitting {
             }
             else {
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i];
+                    ddouble x = X[i];
                     b[i] = Y[i];
 
                     m[i, 0] = x;

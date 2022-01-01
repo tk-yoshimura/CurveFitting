@@ -1,6 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
@@ -8,7 +9,7 @@ namespace CurveFitting {
     public class RobustPolynomialFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustPolynomialFittingMethod(double[] xs, double[] ys, int degree, bool enable_intercept)
+        public RobustPolynomialFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
             : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
@@ -24,9 +25,9 @@ namespace CurveFitting {
         public bool EnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector coefficients) {
+        public override ddouble FittingValue(ddouble x, Vector coefficients) {
             if (EnableIntercept) {
-                double y = coefficients[0], ploy_x = 1;
+                ddouble y = coefficients[0], ploy_x = 1;
 
                 for (int i = 1; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -36,7 +37,7 @@ namespace CurveFitting {
                 return y;
             }
             else {
-                double y = 0, ploy_x = 1;
+                ddouble y = 0, ploy_x = 1;
 
                 for (int i = 0; i < coefficients.Dim; i++) {
                     ploy_x *= x;
@@ -50,7 +51,7 @@ namespace CurveFitting {
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(int converge_times = 8) {
             double err_threshold, inv_err;
-            double[] xs = X.ToArray(), ys = Y.ToArray();
+            IReadOnlyList<ddouble> xs = X, ys = Y;
             double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
             WeightedPolynomialFittingMethod fitting;
@@ -67,7 +68,7 @@ namespace CurveFitting {
                 err = fitting.Error(coef);
 
                 for (int i = 0; i < Points; i++) {
-                    errs[i] = Math.Abs(err[i]);
+                    errs[i] = Math.Abs((double)err[i]);
                 }
 
                 sort_err_list = (double[])errs.Clone();

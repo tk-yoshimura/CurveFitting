@@ -1,5 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
@@ -7,7 +9,7 @@ namespace CurveFitting {
     public class LinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public LinearFittingMethod(double[] xs, double[] ys, bool enable_intercept)
+        public LinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;
@@ -17,7 +19,7 @@ namespace CurveFitting {
         public bool EnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector parameters) {
+        public override ddouble FittingValue(ddouble x, Vector parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -36,10 +38,10 @@ namespace CurveFitting {
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
             if (EnableIntercept) {
-                double sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = Points;
+                ddouble sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = Points;
 
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i], y = Y[i];
+                    ddouble x = X[i], y = Y[i];
 
                     sum_x += x;
                     sum_y += y;
@@ -47,17 +49,17 @@ namespace CurveFitting {
                     sum_xy += x * y;
                 }
 
-                double r = 1 / (sum_x * sum_x - n * sum_sq_x);
-                double a = (sum_x * sum_xy - sum_sq_x * sum_y) * r;
-                double b = (sum_x * sum_y - n * sum_xy) * r;
+                ddouble r = 1 / (sum_x * sum_x - n * sum_sq_x);
+                ddouble a = (sum_x * sum_xy - sum_sq_x * sum_y) * r;
+                ddouble b = (sum_x * sum_y - n * sum_xy) * r;
 
                 return new Vector(a, b);
             }
             else {
-                double sum_sq_x = 0, sum_xy = 0;
+                ddouble sum_sq_x = 0, sum_xy = 0;
 
                 for (int i = 0; i < Points; i++) {
-                    double x = X[i], y = Y[i];
+                    ddouble x = X[i], y = Y[i];
 
                     sum_sq_x += x * x;
                     sum_xy += x * y;

@@ -49,5 +49,9 @@
 *.pyc
 
 # Other
+nuget.exe
+nugetpack.bat
+/**/*.nuspec
+/**/*.nupkg
 
 # Safelist

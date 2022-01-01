@@ -1,6 +1,7 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace CurveFitting {
 
@@ -8,7 +9,7 @@ namespace CurveFitting {
     public class RobustLinearFittingMethod : FittingMethod {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFittingMethod(double[] xs, double[] ys, bool enable_intercept)
+        public RobustLinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;
@@ -18,7 +19,7 @@ namespace CurveFitting {
         public bool EnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector parameters) {
+        public override ddouble FittingValue(ddouble x, Vector parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -37,7 +38,7 @@ namespace CurveFitting {
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(int converge_times = 8) {
             double err_threshold, inv_err;
-            double[] xs = X.ToArray(), ys = Y.ToArray();
+            IReadOnlyList<ddouble> xs = X, ys = Y;
             double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
             WeightedLinearFittingMethod fitting;
@@ -54,7 +55,7 @@ namespace CurveFitting {
                 err = fitting.Error(coef);
 
                 for (int i = 0; i < Points; i++) {
-                    errs[i] = Math.Abs(err[i]);
+                    errs[i] = Math.Abs((double)err[i]);
                 }
 
                 sort_err_list = (double[])errs.Clone();

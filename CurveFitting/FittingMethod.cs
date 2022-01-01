@@ -1,4 +1,5 @@
 ﻿using Algebra;
+using DoubleDouble;
 using System;
 using System.Collections.Generic;
 
@@ -7,10 +8,10 @@ namespace CurveFitting {
     public abstract class FittingMethod {
 
         /// <summary>フィッティング対象の独立変数</summary>
-        public IReadOnlyList<double> X { get; private set; }
+        public IReadOnlyList<ddouble> X { get; private set; }
 
         /// <summary>フィッティング対象の従属変数</summary>
-        public IReadOnlyList<double> Y { get; private set; }
+        public IReadOnlyList<ddouble> Y { get; private set; }
 
         /// <summary>フィッティング対象数</summary>
         public int Points { get; private set; }
@@ -19,15 +20,15 @@ namespace CurveFitting {
         public int Parameters { get; private set; }
 
         /// <summary>コンストラクタ</summary>
-        public FittingMethod(double[] xs, double[] ys, int parameters) {
+        public FittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int parameters) {
             if (xs is null) {
                 throw new ArgumentNullException(nameof(xs));
             }
             if (ys is null) {
                 throw new ArgumentNullException(nameof(ys));
             }
-            if (xs.Length < parameters || xs.Length != ys.Length) {
-                throw new ArgumentException($"{nameof(xs.Length)}, {nameof(ys.Length)}");
+            if (xs.Count < parameters || xs.Count != ys.Count) {
+                throw new ArgumentException($"{nameof(xs.Count)}, {nameof(ys.Count)}");
             }
             if (parameters < 1) {
                 throw new ArgumentException(null, nameof(parameters));
@@ -35,12 +36,12 @@ namespace CurveFitting {
 
             this.X = xs;
             this.Y = ys;
-            this.Points = xs.Length;
+            this.Points = xs.Count;
             this.Parameters = parameters;
         }
 
         /// <summary>誤差二乗和</summary>
-        public double Cost(Vector parameters) {
+        public ddouble Cost(Vector parameters) {
             if (parameters is null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -49,7 +50,7 @@ namespace CurveFitting {
             }
 
             Vector errors = Error(parameters);
-            double cost = 0;
+            ddouble cost = 0;
             for (int i = 0; i < errors.Dim; i++) {
                 cost += errors[i] * errors[i];
             }
@@ -76,6 +77,6 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング値</summary>
-        public abstract double FittingValue(double x, Vector parameters);
+        public abstract ddouble FittingValue(ddouble x, Vector parameters);
     }
 }

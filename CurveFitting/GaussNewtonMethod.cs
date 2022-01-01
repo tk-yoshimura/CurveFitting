@@ -1,4 +1,6 @@
 ﻿using Algebra;
+using DoubleDouble;
+using System.Collections.Generic;
 
 namespace CurveFitting {
     /// <summary>Gauss-Newton法</summary>
@@ -6,23 +8,23 @@ namespace CurveFitting {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public GaussNewtonMethod(double[] xs, double[] ys, FittingFunction func)
+        public GaussNewtonMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, FittingFunction func)
             : base(xs, ys, func.Parameters) {
 
             this.func = func;
         }
 
         /// <summary>フィッティング値</summary>
-        public override double FittingValue(double x, Vector parameters) {
+        public override ddouble FittingValue(ddouble x, Vector parameters) {
             return func.F(x, parameters);
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector parameters, double lambda = 0.75, int loop = 32) {
+        public Vector ExecuteFitting(Vector parameters, double lambda = 0.75, int iter = 64) {
             Vector errors, dparam;
             Matrix jacobian;
 
-            for (int j = 0; j < loop; j++) {
+            for (int j = 0; j < iter; j++) {
                 errors = Error(parameters);
                 jacobian = Jacobian(parameters);
                 dparam = jacobian.Inverse * errors;
