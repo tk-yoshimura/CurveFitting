@@ -6,6 +6,7 @@
  
  ## Install
 [Download DLL](https://github.com/tk-yoshimura/CurveFitting/releases)
+[Download nuget](https://www.nuget.org/packages/TYoshimura.CurveFitting/)
 
 - Import Algebra(https://github.com/tk-yoshimura/Algebra)
 - Import DoubleDouble(https://github.com/tk-yoshimura/DoubleDouble)
@@ -17,4 +18,4 @@
 
 ## Author
 
-[tk-yoshimura](https://github.com/tk-yoshimura)
+[T.Yoshimura](https://github.com/tk-yoshimura)
