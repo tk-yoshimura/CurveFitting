@@ -67,6 +67,5 @@ namespace CurveFitting {
                 return new Vector(sum_xy / sum_sq_x);
             }
         }
-
     }
 }
