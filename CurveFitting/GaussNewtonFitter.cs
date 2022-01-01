@@ -3,12 +3,12 @@ using DoubleDouble;
 using System.Collections.Generic;
 
 namespace CurveFitting {
-    /// <summary>Levenberg-MarguardtMethod法</summary>
-    public class LevenbergMarquardtMethod : FittingMethod {
+    /// <summary>Gauss-Newton法</summary>
+    public class GaussNewtonFitter : Fitter {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public LevenbergMarquardtMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, FittingFunction func)
+        public GaussNewtonFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, FittingFunction func)
             : base(xs, ys, func.Parameters) {
 
             this.func = func;
@@ -20,26 +20,20 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int iter = 64) {
+        public Vector ExecuteFitting(Vector parameters, double lambda = 0.75, int iter = 64) {
             Vector errors, dparam;
-            Matrix jacobian, jacobian_transpose;
-
-            double lambda = lambda_init;
+            Matrix jacobian;
 
             for (int j = 0; j < iter; j++) {
                 errors = Error(parameters);
                 jacobian = Jacobian(parameters);
-                jacobian_transpose = jacobian.Transpose;
-
-                dparam = (jacobian_transpose * jacobian + lambda * Matrix.Identity(Parameters)).Inverse * jacobian_transpose * errors;
+                dparam = jacobian.Inverse * errors;
 
                 if (!Vector.IsValid(dparam)) {
                     break;
                 }
 
-                parameters -= dparam;
-
-                lambda *= lambda_decay;
+                parameters -= dparam * lambda;
             }
 
             return parameters;

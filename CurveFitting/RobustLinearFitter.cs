@@ -6,10 +6,10 @@ using System.Collections.Generic;
 namespace CurveFitting {
 
     /// <summary>ロバスト線形フィッティング</summary>
-    public class RobustLinearFittingMethod : FittingMethod {
+    public class RobustLinearFitter : Fitter {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
+        public RobustLinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;
@@ -41,14 +41,14 @@ namespace CurveFitting {
             IReadOnlyList<ddouble> xs = X, ys = Y;
             double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
-            WeightedLinearFittingMethod fitting;
+            WeightedLinearFitter fitting;
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedLinearFittingMethod(xs, ys, weights, EnableIntercept);
+                fitting = new WeightedLinearFitter(xs, ys, weights, EnableIntercept);
 
                 coef = fitting.ExecuteFitting();
 

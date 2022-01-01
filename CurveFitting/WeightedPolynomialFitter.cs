@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace CurveFitting {
 
     /// <summary>重み付き多項式フィッティング</summary>
-    public class WeightedPolynomialFittingMethod : FittingMethod {
+    public class WeightedPolynomialFitter : Fitter {
 
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedPolynomialFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, int degree, bool enable_intercept)
+        public WeightedPolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, int degree, bool enable_intercept)
             : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;

@@ -28,7 +28,7 @@ namespace CurveFitting.Tests {
                 ys[i] = fitting_func(xs[i], p);
             }
 
-            GaussNewtonMethod fitting = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
+            GaussNewtonFitter fitting = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
             var v = fitting.ExecuteFitting(new Vector(3, 4));
 

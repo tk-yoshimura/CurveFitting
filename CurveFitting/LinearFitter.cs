@@ -6,10 +6,10 @@ using System.Collections.Generic;
 namespace CurveFitting {
 
     /// <summary>線形フィッティング</summary>
-    public class LinearFittingMethod : FittingMethod {
+    public class LinearFitter : Fitter {
 
         /// <summary>コンストラクタ</summary>
-        public LinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
+        public LinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;

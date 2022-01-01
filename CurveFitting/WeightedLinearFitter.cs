@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace CurveFitting {
 
     /// <summary>重み付き線形フィッティング</summary>
-    public class WeightedLinearFittingMethod : FittingMethod {
+    public class WeightedLinearFitter : Fitter {
 
         readonly double[] weight_list;
 
         /// <summary>コンストラクタ</summary>
-        public WeightedLinearFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, bool enable_intercept)
+        public WeightedLinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, double[] weights, bool enable_intercept)
             : base(xs, ys, enable_intercept ? 2 : 1) {
 
             EnableIntercept = enable_intercept;

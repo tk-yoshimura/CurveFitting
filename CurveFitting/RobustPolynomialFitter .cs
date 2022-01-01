@@ -6,10 +6,10 @@ using System.Collections.Generic;
 namespace CurveFitting {
 
     /// <summary>ロバスト多項式フィッティング</summary>
-    public class RobustPolynomialFittingMethod : FittingMethod {
+    public class RobustPolynomialFitter : Fitter {
 
         /// <summary>コンストラクタ</summary>
-        public RobustPolynomialFittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
+        public RobustPolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
             : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
 
             this.Degree = degree;
@@ -54,14 +54,14 @@ namespace CurveFitting {
             IReadOnlyList<ddouble> xs = X, ys = Y;
             double[] weights = new double[Points], errs = new double[Points], sort_err_list;
             Vector err, coef = null;
-            WeightedPolynomialFittingMethod fitting;
+            WeightedPolynomialFitter fitting;
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedPolynomialFittingMethod(xs, ys, weights, Degree, EnableIntercept);
+                fitting = new WeightedPolynomialFitter(xs, ys, weights, Degree, EnableIntercept);
 
                 coef = fitting.ExecuteFitting();
 

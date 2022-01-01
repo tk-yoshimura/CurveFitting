@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CurveFitting {
     /// <summary>フィッティング基本クラス</summary>
-    public abstract class FittingMethod {
+    public abstract class Fitter {
 
         /// <summary>フィッティング対象の独立変数</summary>
         public IReadOnlyList<ddouble> X { get; private set; }
@@ -20,7 +20,7 @@ namespace CurveFitting {
         public int Parameters { get; private set; }
 
         /// <summary>コンストラクタ</summary>
-        public FittingMethod(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int parameters) {
+        public Fitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int parameters) {
             if (xs is null) {
                 throw new ArgumentNullException(nameof(xs));
             }

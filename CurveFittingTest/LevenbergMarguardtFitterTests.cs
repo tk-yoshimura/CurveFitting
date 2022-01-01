@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
     [TestClass()]
-    public class LevenbergMarquardtTests {
+    public class LevenbergMarquardtFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = { 1, 3, 4, 7 }, ys = new ddouble[xs.Length];
@@ -28,7 +28,7 @@ namespace CurveFitting.Tests {
                 ys[i] = fitting_func(xs[i], p);
             }
 
-            LevenbergMarquardtMethod fitting = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
+            LevenbergMarquardtFitter fitting = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
             var v = fitting.ExecuteFitting(new Vector(7, 2));
 
