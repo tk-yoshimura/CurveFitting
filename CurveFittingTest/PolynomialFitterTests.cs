@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
     [TestClass()]
-    public class PolynomialFittingMethodTests {
+    public class PolynomialFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = { 1, 3, 4, 7, 8, 9, 13, 15, 20 }, ys1 = new ddouble[xs.Length], ys2 = new ddouble[xs.Length];

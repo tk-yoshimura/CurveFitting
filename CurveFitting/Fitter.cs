@@ -78,5 +78,16 @@ namespace CurveFitting {
 
         /// <summary>フィッティング値</summary>
         public abstract ddouble FittingValue(ddouble x, Vector parameters);
+
+        /// <summary>フィッティング値</summary>
+        public ddouble[] FittingValue(IReadOnlyList<ddouble> xs, Vector parameters) {
+            List<ddouble> ys = new();
+
+            for (int i = 0; i < xs.Count; i++) {
+                ys.Add(FittingValue(xs[i], parameters));
+            }
+
+            return ys.ToArray();
+        }
     }
 }

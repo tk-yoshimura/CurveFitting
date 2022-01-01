@@ -8,7 +8,7 @@ namespace CurveFitting {
     public class PolynomialFitter : Fitter {
         /// <summary>コンストラクタ</summary>
         public PolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
-            : base(xs, ys, degree + (enable_intercept ? 1 : 0)) {
+            : base(xs, ys, checked(degree + (enable_intercept ? 1 : 0))) {
 
             this.Degree = degree;
             this.EnableIntercept = enable_intercept;

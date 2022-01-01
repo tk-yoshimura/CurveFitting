@@ -7,6 +7,8 @@ namespace CurveFitting {
 
     /// <summary>線形フィッティング</summary>
     public class LinearFitter : Fitter {
+        /// <summary>y切片を有効にするか</summary>
+        public bool EnableIntercept { get; private set; }
 
         /// <summary>コンストラクタ</summary>
         public LinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
@@ -14,9 +16,6 @@ namespace CurveFitting {
 
             EnableIntercept = enable_intercept;
         }
-
-        /// <summary>y切片を有効にするか</summary>
-        public bool EnableIntercept { get; private set; }
 
         /// <summary>フィッティング値</summary>
         public override ddouble FittingValue(ddouble x, Vector parameters) {

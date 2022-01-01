@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
     [TestClass()]
-    public class GaussNewtonMethodTests {
+    public class GaussNewtonFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = { 1, 3, 4, 7 }, ys = new ddouble[xs.Length];

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CurveFitting.Tests {
     [TestClass()]
-    public class LinearFittingMethodTests {
+    public class LinearFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = { 2, 3 }, ys = { 1, 8 };
