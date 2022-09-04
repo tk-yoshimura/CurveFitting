@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>false</Deterministic>
     <IsPackable>false</IsPackable>
@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TYoshimura.Algebra" Version="1.2.0" />
+    <PackageReference Include="TYoshimura.Algebra" Version="1.3.0" />
+    <PackageReference Include="TYoshimura.DoubleDouble" Version="2.5.0" />
   </ItemGroup>
 
 </Project>
