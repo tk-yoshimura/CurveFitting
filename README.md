@@ -5,7 +5,7 @@
  .NET 6.0
  
  ## Install
-[Download DLL](https://github.com/tk-yoshimura/CurveFitting/releases)
+[Download DLL](https://github.com/tk-yoshimura/CurveFitting/releases)  
 [Download nuget](https://www.nuget.org/packages/TYoshimura.CurveFitting/)
 
 - Import Algebra(https://github.com/tk-yoshimura/Algebra)
