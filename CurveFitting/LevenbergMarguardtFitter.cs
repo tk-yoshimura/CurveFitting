@@ -47,7 +47,7 @@ namespace CurveFitting {
 
         /// <summary>ヤコビアン行列</summary>
         private Matrix Jacobian(Vector parameters) {
-            Matrix jacobian = new(Points, func.Parameters);
+            Matrix jacobian = Matrix.Zero(Points, func.Parameters);
 
             for (int i = 0, j; i < Points; i++) {
                 Vector df = func.DiffF(X[i], parameters);

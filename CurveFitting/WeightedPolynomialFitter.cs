@@ -86,7 +86,7 @@ namespace CurveFitting {
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting() {
-            Matrix m = new(Points, Parameters);
+            Matrix m = Matrix.Zero(Points, Parameters);
             Vector b = Vector.Zero(Points);
 
             if (EnableIntercept) {

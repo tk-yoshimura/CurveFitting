@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CurveFitting")]
-[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2019-2022")]
+[assembly: AssemblyCopyright("Copyright © T.Yoshimura 2019-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -14,4 +14,4 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("e839771a-62fc-431e-a513-cb484cacc2e8")]
 
-[assembly: AssemblyVersion("1.3.0.*")]
+[assembly: AssemblyVersion("1.4.0.*")]
