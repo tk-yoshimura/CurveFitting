@@ -1,81 +1,97 @@
 ﻿using Algebra;
 using DoubleDouble;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace CurveFitting {
 
     /// <summary>多項式フィッティング</summary>
     public class PolynomialFitter : Fitter {
-        /// <summary>コンストラクタ</summary>
-        public PolynomialFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int degree, bool enable_intercept)
-            : base(xs, ys, checked(degree + (enable_intercept ? 1 : 0))) {
 
-            this.Degree = degree;
-            this.EnableIntercept = enable_intercept;
-        }
+        private readonly SumTable sum_table;
+        private readonly ddouble? intercept;
 
         /// <summary>次数</summary>
         public int Degree {
             get; private set;
         }
 
-        /// <summary>y切片を有効にするか</summary>
-        public bool EnableIntercept { get; set; }
+        /// <summary>コンストラクタ</summary>
+        public PolynomialFitter(Vector xs, Vector ys, int degree, ddouble? intercept = null)
+            : base(xs, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray(),
+                  parameters: checked(degree + 1)) {
+
+            this.sum_table = new(X, Y);
+            this.intercept = intercept;
+            this.Degree = degree;
+        }
 
         /// <summary>フィッティング値</summary>
-        public override ddouble FittingValue(ddouble x, Vector coefficients) {
-            if (EnableIntercept) {
-                ddouble y = coefficients[coefficients.Dim - 1];
-
-                for (int i = coefficients.Dim - 2; i >= 0; i--) {
-                    y = y * x + coefficients[i];
-                }
-
-                return y;
+        public override ddouble FittingValue(ddouble x, Vector parameters) {
+            if (parameters.Dim != Parameters) {
+                throw new ArgumentException("Illegal length.", nameof(parameters));
             }
-            else {
-                ddouble y = coefficients[coefficients.Dim - 1];
 
-                for (int i = coefficients.Dim - 2; i >= 0; i--) {
-                    y = y * x + coefficients[i];
-                }
-                y *= x;
+            ddouble y = parameters[parameters.Dim - 1];
 
-                return y;
+            for (int i = parameters.Dim - 2; i >= 0; i--) {
+                y = y * x + parameters[i];
             }
+
+            return y;
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting() {
-            Matrix m = Matrix.Zero(Points, Parameters);
-            Vector b = Vector.Zero(Points);
+        public Vector ExecuteFitting(Vector? weights = null) {
+            bool enable_intercept = intercept is null;
 
-            if (EnableIntercept) {
-                for (int i = 0; i < Points; i++) {
-                    ddouble x = X[i];
-                    b[i] = Y[i];
+            sum_table.W = weights;
+            (Matrix m, Vector v) = GenerateTable(sum_table, Degree, enable_intercept);
 
-                    m[i, 0] = 1;
+            if (enable_intercept) {
+                Vector parameters = Matrix.Solve(m, v);
 
-                    for (int j = 1; j <= Degree; j++) {
-                        m[i, j] = m[i, j - 1] * x;
+                return parameters;
+            }
+            else {
+                Vector parameters = Vector.Zero(Parameters);
+                parameters[0] = intercept.Value;
+                parameters[1..] = Matrix.Solve(m, v);
+
+                return parameters;
+            }
+        }
+
+        internal static (Matrix m, Vector v) GenerateTable(SumTable sum_table, int degree, bool enable_intercept) {
+            int dim = degree + (enable_intercept ? 1 : 0);
+
+            ddouble[,] m = new ddouble[dim, dim];
+            ddouble[] v = new ddouble[dim];
+
+            if (enable_intercept) {
+                for (int i = 0; i < dim; i++) {
+                    for (int j = i; j < dim; j++) {
+                        m[i, j] = m[j, i] = sum_table[i + j, 0];
                     }
+                }
+
+                for (int i = 0; i < dim; i++) {
+                    v[i] = sum_table[i, 1];
                 }
             }
             else {
-                for (int i = 0; i < Points; i++) {
-                    ddouble x = X[i];
-                    b[i] = Y[i];
-
-                    m[i, 0] = x;
-
-                    for (int j = 1; j < Degree; j++) {
-                        m[i, j] = m[i, j - 1] * x;
+                for (int i = 0; i < dim; i++) {
+                    for (int j = i; j < dim; j++) {
+                        m[i, j] = m[j, i] = sum_table[i + j + 2, 0];
                     }
+                }
+
+                for (int i = 0; i < dim; i++) {
+                    v[i] = sum_table[i + 1, 1];
                 }
             }
 
-            return (m.Transpose * m).Inverse * m.Transpose * b;
+            return (m, v);
         }
     }
 }

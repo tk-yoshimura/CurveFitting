@@ -1,70 +1,51 @@
 ﻿using Algebra;
 using DoubleDouble;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace CurveFitting {
 
     /// <summary>線形フィッティング</summary>
     public class LinearFitter : Fitter {
-        /// <summary>y切片を有効にするか</summary>
-        public bool EnableIntercept { get; private set; }
+
+        private readonly SumTable sum_table;
+        private readonly ddouble? intercept;
 
         /// <summary>コンストラクタ</summary>
-        public LinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
-            : base(xs, ys, enable_intercept ? 2 : 1) {
+        public LinearFitter(Vector xs, Vector ys, ddouble? intercept = null)
+            : base(xs, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray(),
+                  parameters: 2) {
 
-            EnableIntercept = enable_intercept;
+            this.sum_table = new(X, Y);
+            this.intercept = intercept;
         }
 
         /// <summary>フィッティング値</summary>
         public override ddouble FittingValue(ddouble x, Vector parameters) {
-            if (parameters is null) {
-                throw new ArgumentNullException(nameof(parameters));
-            }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(null, nameof(parameters));
+                throw new ArgumentException("Illegal length.", nameof(parameters));
             }
 
-            if (EnableIntercept) {
-                return parameters[0] + parameters[1] * x;
-            }
-            else {
-                return parameters[0] * x;
-            }
+            return parameters[0] + parameters[1] * x;
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting() {
-            if (EnableIntercept) {
-                ddouble sum_x = 0, sum_y = 0, sum_sq_x = 0, sum_xy = 0, n = Points;
+        public Vector ExecuteFitting(Vector? weights = null) {
+            sum_table.W = weights;
 
-                for (int i = 0; i < Points; i++) {
-                    ddouble x = X[i], y = Y[i];
+            ddouble sum_wxx = sum_table[2, 0], sum_wxy = sum_table[1, 1];
 
-                    sum_x += x;
-                    sum_y += y;
-                    sum_sq_x += x * x;
-                    sum_xy += x * y;
-                }
+            if (intercept is null) {
+                ddouble sum_w = sum_table[0, 0], sum_wx = sum_table[1, 0], sum_wy = sum_table[0, 1];
 
-                ddouble r = 1 / (sum_x * sum_x - n * sum_sq_x);
-                ddouble a = (sum_x * sum_xy - sum_sq_x * sum_y) * r;
-                ddouble b = (sum_x * sum_y - n * sum_xy) * r;
+                ddouble r = 1 / (sum_wx * sum_wx - sum_w * sum_wxx);
+                ddouble a = (sum_wx * sum_wxy - sum_wxx * sum_wy) * r;
+                ddouble b = (sum_wx * sum_wy - sum_w * sum_wxy) * r;
 
                 return new Vector(a, b);
             }
             else {
-                ddouble sum_sq_x = 0, sum_xy = 0;
-
-                for (int i = 0; i < Points; i++) {
-                    ddouble x = X[i], y = Y[i];
-
-                    sum_sq_x += x * x;
-                    sum_xy += x * y;
-                }
-
-                return new Vector(sum_xy / sum_sq_x);
+                return new Vector(intercept.Value, sum_wxy / sum_wxx);
             }
         }
     }

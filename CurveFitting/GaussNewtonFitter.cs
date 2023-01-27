@@ -1,6 +1,6 @@
 ﻿using Algebra;
 using DoubleDouble;
-using System.Collections.Generic;
+using System;
 
 namespace CurveFitting {
     /// <summary>Gauss-Newton法</summary>
@@ -8,7 +8,7 @@ namespace CurveFitting {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public GaussNewtonFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, FittingFunction func)
+        public GaussNewtonFitter(Vector xs, Vector ys, FittingFunction func)
             : base(xs, ys, func.Parameters) {
 
             this.func = func;
@@ -20,12 +20,12 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector parameters, double lambda = 0.75, int iter = 64) {
+        public Vector ExecuteFitting(Vector parameters, double lambda = 0.75, int iter = 128, Vector? weights = null, Func<Vector, bool>? iter_callback = null) {
             Vector errors, dparam;
             Matrix jacobian;
 
             for (int j = 0; j < iter; j++) {
-                errors = Error(parameters);
+                errors = weights is null ? Error(parameters) : weights * Error(parameters);
                 jacobian = Jacobian(parameters);
                 dparam = jacobian.Inverse * errors;
 
@@ -34,6 +34,12 @@ namespace CurveFitting {
                 }
 
                 parameters -= dparam * lambda;
+
+                if (iter_callback is not null) {
+                    if (!iter_callback(parameters)) {
+                        break;
+                    }
+                }
             }
 
             return parameters;

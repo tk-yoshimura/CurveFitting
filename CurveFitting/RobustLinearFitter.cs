@@ -1,65 +1,36 @@
 ﻿using Algebra;
 using DoubleDouble;
 using System;
-using System.Collections.Generic;
 
 namespace CurveFitting {
 
     /// <summary>ロバスト線形フィッティング</summary>
-    public class RobustLinearFitter : Fitter {
+    public class RobustLinearFitter : LinearFitter {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, bool enable_intercept)
-            : base(xs, ys, enable_intercept ? 2 : 1) {
-
-            EnableIntercept = enable_intercept;
-        }
-
-        /// <summary>y切片を有効にするか</summary>
-        public bool EnableIntercept { get; private set; }
-
-        /// <summary>フィッティング値</summary>
-        public override ddouble FittingValue(ddouble x, Vector parameters) {
-            if (parameters is null) {
-                throw new ArgumentNullException(nameof(parameters));
-            }
-            if (parameters.Dim != Parameters) {
-                throw new ArgumentException(null, nameof(parameters));
-            }
-
-            if (EnableIntercept) {
-                return parameters[0] + parameters[1] * x;
-            }
-            else {
-                return parameters[0] * x;
-            }
-        }
+        public RobustLinearFitter(Vector xs, Vector ys, ddouble? intercept = null)
+            : base(xs, ys, intercept) { }
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(int converge_times = 8) {
             double err_threshold, inv_err;
-            IReadOnlyList<ddouble> xs = X, ys = Y;
-            double[] weights = new double[Points], errs = new double[Points], sort_err_list;
-            Vector err, coef = null;
-            WeightedLinearFitter fitting;
+            double[] weights = new double[Points], errs = new double[Points];
+
+            Vector coef = null;
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
             }
 
             while (converge_times > 0) {
-                fitting = new WeightedLinearFitter(xs, ys, weights, EnableIntercept);
+                coef = base.ExecuteFitting(new Vector(weights));
 
-                coef = fitting.ExecuteFitting();
-
-                err = fitting.Error(coef);
-
+                Vector err = Error(coef);
                 for (int i = 0; i < Points; i++) {
                     errs[i] = Math.Abs((double)err[i]);
                 }
 
-                sort_err_list = (double[])errs.Clone();
-
+                double[] sort_err_list = (double[])errs.Clone();
                 Array.Sort(sort_err_list);
 
                 err_threshold = sort_err_list[Points / 2] * 1.25;

@@ -1,6 +1,6 @@
 ﻿using Algebra;
 using DoubleDouble;
-using System.Collections.Generic;
+using System;
 
 namespace CurveFitting {
     /// <summary>Levenberg-MarguardtMethod法</summary>
@@ -8,7 +8,7 @@ namespace CurveFitting {
         readonly FittingFunction func;
 
         /// <summary>コンストラクタ</summary>
-        public LevenbergMarquardtFitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, FittingFunction func)
+        public LevenbergMarquardtFitter(Vector xs, Vector ys, FittingFunction func)
             : base(xs, ys, func.Parameters) {
 
             this.func = func;
@@ -20,18 +20,20 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int iter = 64) {
+        public Vector ExecuteFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int iter = 128, Vector? weights = null, Func<Vector, bool>? iter_callback = null) {
             Vector errors, dparam;
             Matrix jacobian, jacobian_transpose;
 
-            double lambda = lambda_init;
+            ddouble lambda = lambda_init;
 
             for (int j = 0; j < iter; j++) {
-                errors = Error(parameters);
+                errors = weights is null ? Error(parameters) : weights * Error(parameters);
                 jacobian = Jacobian(parameters);
                 jacobian_transpose = jacobian.Transpose;
 
-                dparam = (jacobian_transpose * jacobian + lambda * Matrix.Identity(Parameters)).Inverse * jacobian_transpose * errors;
+                Matrix m = jacobian_transpose * jacobian + lambda * Matrix.Identity(Parameters);
+
+                dparam = m.Inverse * jacobian_transpose * errors;
 
                 if (!Vector.IsValid(dparam)) {
                     break;
@@ -40,6 +42,12 @@ namespace CurveFitting {
                 parameters -= dparam;
 
                 lambda *= lambda_decay;
+
+                if (iter_callback is not null) {
+                    if (!iter_callback(parameters)) {
+                        break;
+                    }
+                }
             }
 
             return parameters;

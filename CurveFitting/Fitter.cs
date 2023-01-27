@@ -1,17 +1,16 @@
 ﻿using Algebra;
 using DoubleDouble;
 using System;
-using System.Collections.Generic;
 
 namespace CurveFitting {
     /// <summary>フィッティング基本クラス</summary>
     public abstract class Fitter {
 
         /// <summary>フィッティング対象の独立変数</summary>
-        public IReadOnlyList<ddouble> X { get; private set; }
+        public Vector X { get; private set; }
 
         /// <summary>フィッティング対象の従属変数</summary>
-        public IReadOnlyList<ddouble> Y { get; private set; }
+        public Vector Y { get; private set; }
 
         /// <summary>フィッティング対象数</summary>
         public int Points { get; private set; }
@@ -20,58 +19,39 @@ namespace CurveFitting {
         public int Parameters { get; private set; }
 
         /// <summary>コンストラクタ</summary>
-        public Fitter(IReadOnlyList<ddouble> xs, IReadOnlyList<ddouble> ys, int parameters) {
-            if (xs is null) {
-                throw new ArgumentNullException(nameof(xs));
-            }
-            if (ys is null) {
-                throw new ArgumentNullException(nameof(ys));
-            }
-            if (xs.Count < parameters || xs.Count != ys.Count) {
-                throw new ArgumentException($"{nameof(xs.Count)}, {nameof(ys.Count)}");
+        public Fitter(Vector xs, Vector ys, int parameters) {
+            if (xs.Dim < parameters || xs.Dim != ys.Dim) {
+                throw new ArgumentException($"{nameof(xs.Dim)}, {nameof(ys.Dim)}");
             }
             if (parameters < 1) {
-                throw new ArgumentException(null, nameof(parameters));
+                throw new ArgumentOutOfRangeException(nameof(parameters));
             }
 
-            this.X = xs;
-            this.Y = ys;
-            this.Points = xs.Count;
+            this.X = xs.Copy();
+            this.Y = ys.Copy();
+            this.Points = xs.Dim;
             this.Parameters = parameters;
         }
 
         /// <summary>誤差二乗和</summary>
         public ddouble Cost(Vector parameters) {
-            if (parameters is null) {
-                throw new ArgumentNullException(nameof(parameters));
-            }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(null, nameof(parameters));
+                throw new ArgumentException("Illegal length.", nameof(parameters));
             }
 
             Vector errors = Error(parameters);
-            ddouble cost = 0;
-            for (int i = 0; i < errors.Dim; i++) {
-                cost += errors[i] * errors[i];
-            }
+            ddouble cost = errors.SquareNorm;
 
             return cost;
         }
 
         /// <summary>誤差</summary>
         public Vector Error(Vector parameters) {
-            if (parameters is null) {
-                throw new ArgumentNullException(nameof(parameters));
-            }
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException(null, nameof(parameters));
+                throw new ArgumentException("Illegal length.", nameof(parameters));
             }
 
-            Vector errors = Vector.Zero(Points);
-
-            for (int i = 0; i < Points; i++) {
-                errors[i] = FittingValue(X[i], parameters) - Y[i];
-            }
+            Vector errors = FittingValue(X, parameters) - Y;
 
             return errors;
         }
@@ -80,14 +60,14 @@ namespace CurveFitting {
         public abstract ddouble FittingValue(ddouble x, Vector parameters);
 
         /// <summary>フィッティング値</summary>
-        public ddouble[] FittingValue(IReadOnlyList<ddouble> xs, Vector parameters) {
-            List<ddouble> ys = new();
+        public Vector FittingValue(Vector xs, Vector parameters) {
+            ddouble[] ys = new ddouble[xs.Dim];
 
-            for (int i = 0; i < xs.Count; i++) {
-                ys.Add(FittingValue(xs[i], parameters));
+            for (int i = 0; i < xs.Dim; i++) {
+                ys[i] = FittingValue(xs[i], parameters);
             }
 
-            return ys.ToArray();
+            return ys;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("CurveFitting")]
@@ -14,4 +15,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("e839771a-62fc-431e-a513-cb484cacc2e8")]
 
-[assembly: AssemblyVersion("1.4.0.*")]
+[assembly: AssemblyVersion("1.4.1.*")]
+
+[assembly: InternalsVisibleTo("CurveFittingTest")]
