@@ -1,5 +1,5 @@
-﻿using DoubleDouble;
-using Algebra;
+﻿using Algebra;
+using DoubleDouble;
 using System;
 
 namespace CurveFitting {
@@ -20,7 +20,7 @@ namespace CurveFitting {
         /// <param name="intercept">切片</param>
         public PadeFitter(Vector xs, Vector ys, int numer, int denom, ddouble? intercept = null)
             : base(xs, ys,
-                  parameters: 
+                  parameters:
                   (numer >= 2 && denom >= 2)
                       ? (numer + denom)
                       : throw new ArgumentOutOfRangeException($"{nameof(numer)},{nameof(denom)}")) {

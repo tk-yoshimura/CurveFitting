@@ -1,5 +1,4 @@
-﻿using Algebra;
-using DoubleDouble;
+﻿using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 

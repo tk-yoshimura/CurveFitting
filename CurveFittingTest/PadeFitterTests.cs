@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Algebra;
 using DoubleDouble;
-using Algebra;
-using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace CurveFitting.Tests {
     [TestClass()]
