@@ -12,7 +12,7 @@ namespace CurveFitting {
             : base(xs, ys, degree, intercept) { }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(int iter = 8) {
+        public Vector ExecuteFitting(int iter = 8, double eps = 1e-16) {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
@@ -34,7 +34,7 @@ namespace CurveFitting {
                 Array.Sort(sort_err_list);
 
                 err_threshold = sort_err_list[Points / 2] * 1.25;
-                if (err_threshold <= 1e-14) {
+                if (err_threshold <= eps) {
                     break;
                 }
 
