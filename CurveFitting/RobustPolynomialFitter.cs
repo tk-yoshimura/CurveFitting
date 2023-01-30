@@ -12,7 +12,7 @@ namespace CurveFitting {
             : base(xs, ys, degree, intercept) { }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(int converge_times = 8) {
+        public Vector ExecuteFitting(int iter = 8) {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
@@ -22,7 +22,7 @@ namespace CurveFitting {
                 weights[i] = 1;
             }
 
-            while (converge_times > 0) {
+            while (iter > 0) {
                 coef = base.ExecuteFitting(new Vector(weights));
 
                 Vector err = Error(coef);
@@ -50,7 +50,7 @@ namespace CurveFitting {
                     }
                 }
 
-                converge_times--;
+                iter--;
             }
 
             return coef;

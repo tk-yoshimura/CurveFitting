@@ -29,7 +29,7 @@ namespace CurveFitting {
         /// <summary>フィッティング値</summary>
         public override ddouble FittingValue(ddouble x, Vector parameters) {
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException("Illegal length.", nameof(parameters));
+                throw new ArgumentException("invalid size", nameof(parameters));
             }
 
             ddouble y = parameters[parameters.Dim - 1];

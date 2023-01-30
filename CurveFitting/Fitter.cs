@@ -21,7 +21,7 @@ namespace CurveFitting {
         /// <summary>コンストラクタ</summary>
         public Fitter(Vector xs, Vector ys, int parameters) {
             if (xs.Dim < parameters || xs.Dim != ys.Dim) {
-                throw new ArgumentException($"{nameof(xs.Dim)}, {nameof(ys.Dim)}");
+                throw new ArgumentException("mismatch size", $"{nameof(xs)},{nameof(ys)}");
             }
             if (parameters < 1) {
                 throw new ArgumentOutOfRangeException(nameof(parameters));
@@ -36,7 +36,7 @@ namespace CurveFitting {
         /// <summary>誤差二乗和</summary>
         public ddouble Cost(Vector parameters) {
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException("Illegal length.", nameof(parameters));
+                throw new ArgumentException("invalid size", nameof(parameters));
             }
 
             Vector errors = Error(parameters);
@@ -48,7 +48,7 @@ namespace CurveFitting {
         /// <summary>誤差</summary>
         public Vector Error(Vector parameters) {
             if (parameters.Dim != Parameters) {
-                throw new ArgumentException("Illegal length.", nameof(parameters));
+                throw new ArgumentException("invalid size", nameof(parameters));
             }
 
             Vector errors = FittingValue(X, parameters) - Y;

@@ -4,15 +4,15 @@ using System;
 
 namespace CurveFitting {
 
-    /// <summary>ロバスト線形フィッティング</summary>
-    public class RobustLinearFitter : LinearFitter {
+    /// <summary>ロバストパデフィッティング</summary>
+    public class RobustPadeFitter : PadeFitter {
 
         /// <summary>コンストラクタ</summary>
-        public RobustLinearFitter(Vector xs, Vector ys, ddouble? intercept = null)
-            : base(xs, ys, intercept) { }
+        public RobustPadeFitter(Vector xs, Vector ys, int numer, int denom, ddouble? intercept = null)
+            : base(xs, ys, numer, denom, intercept) { }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(int iter = 8) {
+        public Vector ExecuteFitting(int iter = 8, ddouble? norm_cost = null) {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
@@ -23,7 +23,7 @@ namespace CurveFitting {
             }
 
             while (iter > 0) {
-                coef = base.ExecuteFitting(new Vector(weights));
+                coef = base.ExecuteFitting(new Vector(weights), norm_cost);
 
                 Vector err = Error(coef);
                 for (int i = 0; i < Points; i++) {
