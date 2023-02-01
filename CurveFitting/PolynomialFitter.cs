@@ -32,31 +32,23 @@ namespace CurveFitting {
                 throw new ArgumentException("invalid size", nameof(parameters));
             }
 
-            ddouble y = parameters[parameters.Dim - 1];
-
-            for (int i = parameters.Dim - 2; i >= 0; i--) {
-                y = y * x + parameters[i];
-            }
+            ddouble y = Vector.Polynomial(x, parameters);
 
             return y;
         }
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(Vector? weights = null) {
-            bool enable_intercept = intercept is null;
-
             sum_table.W = weights;
-            (Matrix m, Vector v) = GenerateTable(sum_table, Degree, enable_intercept);
+            (Matrix m, Vector v) = GenerateTable(sum_table, Degree, enable_intercept: intercept is null);
 
-            if (enable_intercept) {
+            if (intercept is null) {
                 Vector parameters = Matrix.Solve(m, v);
 
                 return parameters;
             }
             else {
-                Vector parameters = Vector.Zero(Parameters);
-                parameters[0] = intercept.Value;
-                parameters[1..] = Matrix.Solve(m, v);
+                Vector parameters = Vector.Concat(intercept.Value, Matrix.Solve(m, v));
 
                 return parameters;
             }

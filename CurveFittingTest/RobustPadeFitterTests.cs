@@ -2,15 +2,14 @@
 using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 
 namespace CurveFitting.Tests {
     [TestClass()]
     public class RobustPadeFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            ddouble[] xs = (new ddouble[1024]).Select((_, i) => (ddouble)i / 1024).ToArray();
-            ddouble[] ys = xs.Select(v => ddouble.Cos(v) - 0.25).ToArray();
+            ddouble[] xs = Vector.Arange(1024) / 1024;
+            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
 
             ys[512] = 256;
 

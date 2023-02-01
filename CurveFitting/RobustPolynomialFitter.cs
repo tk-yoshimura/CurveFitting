@@ -16,15 +16,13 @@ namespace CurveFitting {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
-            Vector coef = null;
+            Vector coef = base.ExecuteFitting();
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
             }
 
             while (iter > 0) {
-                coef = base.ExecuteFitting(new Vector(weights));
-
                 Vector err = Error(coef);
                 for (int i = 0; i < Points; i++) {
                     errs[i] = Math.Abs((double)err[i]);
@@ -49,6 +47,8 @@ namespace CurveFitting {
                         weights[i] = r * r;
                     }
                 }
+
+                coef = base.ExecuteFitting(new Vector(weights));
 
                 iter--;
             }

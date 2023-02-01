@@ -1,15 +1,14 @@
 ﻿using Algebra;
 using DoubleDouble;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace CurveFitting.Tests {
     [TestClass()]
     public class RobustLinearFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            ddouble[] xs = (new ddouble[64]).Select((_, i) => (ddouble)i).ToArray();
-            ddouble[] ys = xs.Select(x => -13 + x * 7).ToArray();
+            ddouble[] xs = Vector.Arange(64);
+            ddouble[] ys = Vector.Func(xs, x => -13 + x * 7);
 
             ys[32] = 12;
 

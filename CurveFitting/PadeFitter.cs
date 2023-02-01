@@ -43,27 +43,15 @@ namespace CurveFitting {
             return y;
         }
 
-        protected static ddouble Polynomial(ddouble x, Vector coefs) {
-            ddouble y = coefs[^1];
-
-            for (int i = coefs.Dim - 2; i >= 0; i--) {
-                y = x * y + coefs[i];
-            }
-
-            return y;
-        }
-
         public (ddouble numer, ddouble denom) Fraction(ddouble x, Vector parameters) {
-            ddouble n = Polynomial(x, parameters[..Numer]);
-            ddouble d = Polynomial(x, parameters[Numer..]);
+            ddouble n = Vector.Polynomial(x, parameters[..Numer]);
+            ddouble d = Vector.Polynomial(x, parameters[Numer..]);
 
             return (n, d);
         }
 
         /// <summary>フィッティング</summary>
         public Vector ExecuteFitting(Vector? weights = null, ddouble? norm_cost = null) {
-            bool enable_intercept = intercept is null;
-
             sum_table.W = weights;
             (Matrix m, Vector v) = GenerateTable(sum_table, Numer, Denom);
 
@@ -75,14 +63,12 @@ namespace CurveFitting {
                 }
             }
 
-            Vector parameters = Vector.Zero(Parameters);
-
-            if (enable_intercept) {
+            if (intercept is null) {
                 Vector x = Matrix.Solve(m, v);
 
-                parameters[..Numer] = x[..Numer];
-                parameters[Numer] = 1;
-                parameters[(Numer + 1)..] = x[Numer..];
+                Vector parameters = Vector.Concat(x[..Numer], 1, x[Numer..]);
+
+                return parameters;
             }
             else {
                 v = v[1..] - intercept.Value * m[0, 1..];
@@ -90,13 +76,10 @@ namespace CurveFitting {
 
                 Vector x = Matrix.Solve(m, v);
 
-                parameters[0] = intercept.Value;
-                parameters[1..Numer] = x[..(Numer - 1)];
-                parameters[Numer] = 1;
-                parameters[(Numer + 1)..] = x[(Numer - 1)..];
-            }
+                Vector parameters = Vector.Concat(intercept.Value, x[..(Numer - 1)], 1, x[(Numer - 1)..]);
 
-            return parameters;
+                return parameters;
+            }
         }
 
         internal static (Matrix m, Vector v) GenerateTable(SumTable sum_table, int numer, int denom) {

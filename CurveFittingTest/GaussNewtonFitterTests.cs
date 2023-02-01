@@ -7,9 +7,6 @@ namespace CurveFitting.Tests {
     public class GaussNewtonFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            ddouble[] xs = { 1, 3, 4, 7 }, ys = new ddouble[xs.Length];
-            Vector p = new(2, 3);
-
             static ddouble fitting_func(ddouble x, Vector parameter) {
                 ddouble a = parameter[0], b = parameter[1];
 
@@ -24,9 +21,9 @@ namespace CurveFitting.Tests {
                 return new Vector(b * x * ddouble.Exp(-a * x) / (v * v), 1 / v);
             }
 
-            for (int i = 0; i < xs.Length; i++) {
-                ys[i] = fitting_func(xs[i], p);
-            }
+            Vector p = new(2, 3);
+            ddouble[] xs = { 1, 3, 4, 7 };
+            ddouble[] ys = Vector.Func(xs, x => fitting_func(x, p));
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
@@ -37,10 +34,6 @@ namespace CurveFitting.Tests {
 
         [TestMethod()]
         public void ExecuteWeightedFittingTest() {
-            ddouble[] xs = { 1, 3, 4, 7, 8 }, ys = new ddouble[xs.Length];
-            ddouble[] ws = { 0.5, 0.75, 0, 0.75, 0.5 };
-            Vector p = new(2, 3);
-
             static ddouble fitting_func(ddouble x, Vector parameter) {
                 ddouble a = parameter[0], b = parameter[1];
 
@@ -55,10 +48,12 @@ namespace CurveFitting.Tests {
                 return new Vector(b * x * ddouble.Exp(-a * x) / (v * v), 1 / v);
             }
 
-            for (int i = 0; i < xs.Length; i++) {
-                ys[i] = fitting_func(xs[i], p);
-            }
+            Vector p = new(2, 3);
+            ddouble[] xs = { 1, 3, 4, 7, 8 };
+            ddouble[] ys = Vector.Func(xs, x => fitting_func(x, p));
             ys[2] = 1e+8;
+
+            ddouble[] ws = { 0.5, 0.75, 0, 0.75, 0.5 };
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
