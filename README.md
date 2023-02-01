@@ -1,5 +1,5 @@
 # CurveFitting
- Curvefitting - linear, polynomial, pade, arbitrary function
+ Curvefitting - linear, polynomial, pade, arbitrary function 
 
 ## Requirement
  .NET 6.0
