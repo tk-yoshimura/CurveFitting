@@ -15,23 +15,15 @@
 
 ## Usage
 ```csharp
-ddouble[] xs = (new ddouble[64]).Select((_, i) => (ddouble)i).ToArray();
-ddouble[] ys1 = new ddouble[xs.Length], ys2 = new ddouble[xs.Length];
 Vector p1 = new(2, -1, 1, 5), p2 = new(1, 4, 3, -1);
+ddouble[] xs = { 1, 3, 4, 7, 8, 9, 13, 15, 20 };
+ddouble[] ys1 = Vector.Polynomial(xs, p1), ys2 = Vector.Polynomial(xs, p2);
 
-for (int i = 0; i < xs.Length; i++) {
-    ddouble x = xs[i];
+PolynomialFitter fitter1 = new(xs, ys1, 3);
+PolynomialFitter fitter2 = new(xs, ys2, 3, intercept: 1);
 
-    ys1[i] = p1[0] + p1[1] * x + p1[2] * x * x + p1[3] * x * x * x;
-    ys2[i] = p2[0] + p2[1] * x + p2[2] * x * x + p2[3] * x * x * x;
-}
-ys1[32] = ys2[32] = -64;
-
-RobustPolynomialFitter fitter1 = new(xs, ys1, 3);
-RobustPolynomialFitter fitter2 = new(xs, ys2, 3, intercept: 1);
-
-Assert.IsTrue((fitter1.ExecuteFitting() - p1).Norm < 1e-20);
-Assert.IsTrue((fitter2.ExecuteFitting() - p2).Norm < 1e-20);
+Assert.IsTrue((fitter1.ExecuteFitting() - p1).Norm < 1e-24);
+Assert.IsTrue((fitter2.ExecuteFitting() - p2).Norm < 1e-24);
 ```
 
 ## Licence
