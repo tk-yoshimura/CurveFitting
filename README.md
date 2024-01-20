@@ -2,14 +2,14 @@
  Curvefitting - linear, polynomial, pade, arbitrary function
 
 ## Requirement
- .NET 7.0
+.NET 8.0  
+[Algebra](https://github.com/tk-yoshimura/Algebra)
+[DoubleDouble](https://github.com/tk-yoshimura/DoubleDouble)
  
  ## Install
 [Download DLL](https://github.com/tk-yoshimura/CurveFitting/releases)  
 [Download nuget](https://www.nuget.org/packages/TYoshimura.CurveFitting/)
 
-- Import Algebra(https://github.com/tk-yoshimura/Algebra)
-- Import DoubleDouble(https://github.com/tk-yoshimura/DoubleDouble)
 
 ## Usage
 ```csharp
