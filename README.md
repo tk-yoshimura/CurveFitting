@@ -3,7 +3,7 @@
 
 ## Requirement
 .NET 8.0  
-[Algebra](https://github.com/tk-yoshimura/Algebra)
+[Algebra](https://github.com/tk-yoshimura/Algebra)  
 [DoubleDouble](https://github.com/tk-yoshimura/DoubleDouble)
  
  ## Install
