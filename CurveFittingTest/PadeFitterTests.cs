@@ -26,6 +26,8 @@ namespace CurveFitting.Tests {
                     $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
                 );
             }
+
+            Assert.IsTrue(fitter.Error(parameters).Norm < 1e-4);
         }
 
         [TestMethod()]
@@ -45,6 +47,8 @@ namespace CurveFitting.Tests {
                     $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
                 );
             }
+
+            Assert.IsTrue(fitter.Error(parameters).Norm < 1e-4);
         }
 
         [TestMethod()]

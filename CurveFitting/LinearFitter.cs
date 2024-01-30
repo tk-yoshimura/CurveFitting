@@ -13,10 +13,9 @@ namespace CurveFitting {
 
         /// <summary>コンストラクタ</summary>
         public LinearFitter(Vector xs, Vector ys, ddouble? intercept = null)
-            : base(xs, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray(),
-                  parameters: 2) {
+            : base(xs, ys, parameters: 2) {
 
-            this.sum_table = new(X, Y);
+            this.sum_table = new(X, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray());
             this.intercept = intercept;
         }
 

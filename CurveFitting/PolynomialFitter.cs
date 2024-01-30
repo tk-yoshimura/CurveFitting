@@ -18,10 +18,9 @@ namespace CurveFitting {
 
         /// <summary>コンストラクタ</summary>
         public PolynomialFitter(Vector xs, Vector ys, int degree, ddouble? intercept = null)
-            : base(xs, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray(),
-                  parameters: checked(degree + 1)) {
+            : base(xs, ys, parameters: checked(degree + 1)) {
 
-            this.sum_table = new(X, Y);
+            this.sum_table = new(X, (intercept is null) ? ys : ys.Select(y => y.val - intercept.Value).ToArray());
             this.intercept = intercept;
             this.Degree = degree;
         }
