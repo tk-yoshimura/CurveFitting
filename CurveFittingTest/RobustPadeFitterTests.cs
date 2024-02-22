@@ -9,7 +9,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             ys[512] = 256;
 

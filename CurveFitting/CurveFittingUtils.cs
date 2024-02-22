@@ -93,11 +93,11 @@ namespace CurveFitting {
         }
 
         public static ddouble MaxRelativeError(Vector expected, Vector actual) {
-            return Vector.Func(expected, actual, RelativeError).Select(item => item.val).Max();
+            return Vector.Func(RelativeError, expected, actual).Select(item => item.val).Max();
         }
 
         public static ddouble MaxAbsoluteError(Vector expected, Vector actual) {
-            return Vector.Func(expected, actual, AbsoluteError).Select(item => item.val).Max();
+            return Vector.Func(AbsoluteError, expected, actual).Select(item => item.val).Max();
         }
 
         public static IEnumerable<(ddouble numer, ddouble denom)> EnumeratePadeCoef(Vector param, int m, int n) {

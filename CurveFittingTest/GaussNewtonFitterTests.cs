@@ -22,8 +22,8 @@ namespace CurveFitting.Tests {
             }
 
             Vector p = new(2, 3);
-            ddouble[] xs = { 1, 3, 4, 7 };
-            ddouble[] ys = Vector.Func(xs, x => fitting_func(x, p));
+            ddouble[] xs = [1, 3, 4, 7];
+            ddouble[] ys = Vector.Func(x => fitting_func(x, p), xs);
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
@@ -49,11 +49,11 @@ namespace CurveFitting.Tests {
             }
 
             Vector p = new(2, 3);
-            ddouble[] xs = { 1, 3, 4, 7, 8 };
-            ddouble[] ys = Vector.Func(xs, x => fitting_func(x, p));
+            ddouble[] xs = [1, 3, 4, 7, 8];
+            ddouble[] ys = Vector.Func(x => fitting_func(x, p), xs);
             ys[2] = 1e+8;
 
-            ddouble[] ws = { 0.5, 0.75, 0, 0.75, 0.5 };
+            ddouble[] ws = [0.5, 0.75, 0, 0.75, 0.5];
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 

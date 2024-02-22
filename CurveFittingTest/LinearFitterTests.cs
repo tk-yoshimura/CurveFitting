@@ -7,7 +7,7 @@ namespace CurveFitting.Tests {
     public class LinearFitterTests {
         [TestMethod()]
         public void ExecuteFittingTest() {
-            ddouble[] xs = { 2, 3 }, ys = { 1, 8 };
+            ddouble[] xs = [2, 3], ys = [1, 8];
 
             LinearFitter fitter1 = new(xs, ys);
             LinearFitter fitter2 = new(xs, ys, intercept: 0);
@@ -23,7 +23,7 @@ namespace CurveFitting.Tests {
 
         [TestMethod()]
         public void ExecuteWeightedFittingTest() {
-            ddouble[] xs = { 2, 3, 4 }, ys = { 1, 8, 1e+8 }, ws = { 0.5, 0.5, 0 };
+            ddouble[] xs = [2, 3, 4], ys = [1, 8, 1e+8], ws = [0.5, 0.5, 0];
 
             LinearFitter fitter1 = new(xs, ys);
             LinearFitter fitter2 = new(xs, ys, intercept: 0);

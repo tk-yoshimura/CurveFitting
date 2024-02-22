@@ -23,9 +23,7 @@ namespace CurveFitting {
             if (xs.Dim < parameters || xs.Dim != ys.Dim) {
                 throw new ArgumentException("mismatch size", $"{nameof(xs)},{nameof(ys)}");
             }
-            if (parameters < 1) {
-                throw new ArgumentOutOfRangeException(nameof(parameters));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(parameters, 1, nameof(parameters));
 
             this.X = xs.Copy();
             this.Y = ys.Copy();

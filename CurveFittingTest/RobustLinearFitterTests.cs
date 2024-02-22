@@ -8,7 +8,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingTest() {
             ddouble[] xs = Vector.Arange(64);
-            ddouble[] ys = Vector.Func(xs, x => -13 + x * 7);
+            ddouble[] ys = Vector.Func(x => -13 + x * 7, xs);
 
             ys[32] = 12;
 

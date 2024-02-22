@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CurveFitting {
     public class SumTable {
-        private readonly List<Vector> xs = new(), ys = new();
+        private readonly List<Vector> xs = [], ys = [];
         private Dictionary<(int xn, int yn), ddouble> table;
 
         private Vector? w = null;
@@ -70,7 +70,7 @@ namespace CurveFitting {
             get => w;
             set {
                 if (value is not null && xs[0].Dim != value.Dim) {
-                    throw new ArgumentException("invalid size", nameof(w));
+                    throw new ArgumentException("invalid size", nameof(W));
                 }
 
                 this.w = value;

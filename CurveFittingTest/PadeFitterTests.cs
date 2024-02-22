@@ -10,7 +10,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingWithInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
@@ -33,7 +33,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingWithoutInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
@@ -54,7 +54,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteWeightedFittingWithInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
             ddouble[] ws = Vector.Fill(xs.Length, value: 0.5);
 
             ys[256] = 1e+8;
@@ -83,7 +83,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteWeightedFittingWithoutInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
             ddouble[] ws = Vector.Fill(xs.Length, value: 0.5);
 
             ys[256] = 1e+8;
@@ -110,7 +110,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingWithInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
@@ -135,7 +135,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteFittingWithoutInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
@@ -158,7 +158,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteWeightedFittingWithInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
             ddouble[] ws = Vector.Fill(xs.Length, value: 0.5);
 
             ys[256] = 1e+8;
@@ -191,7 +191,7 @@ namespace CurveFitting.Tests {
         [TestMethod()]
         public void ExecuteWeightedFittingWithoutInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
-            ddouble[] ys = Vector.Func(xs, x => ddouble.Cos(x) - 0.25);
+            ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
             ddouble[] ws = Vector.Fill(xs.Length, value: 0.5);
 
             ys[256] = 1e+8;
