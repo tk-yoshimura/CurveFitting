@@ -146,5 +146,27 @@ namespace CurveFitting.Tests {
                 CurveFittingUtils.EnumeratePadeCoef(new Vector(1, 2, 3, 4, 5), 1, 4).ToArray()
             );
         }
+
+        [TestMethod()]
+        public void StandardizeExponentTest() {
+            Vector v = new double[] { 0, 0.125, 0.25, -0.125 };
+
+            (long exp_scale, Vector u) = CurveFittingUtils.StandardizeExponent(v);
+
+            Assert.AreEqual(-2, exp_scale);
+            Assert.AreEqual(new Vector(0, 0.5, 1, -0.5), u);
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                _ = CurveFittingUtils.StandardizeExponent(new double[] { 0, 0, 0 });
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                _ = CurveFittingUtils.StandardizeExponent(new double[] { 1, 1, double.PositiveInfinity });
+            });
+
+            Assert.ThrowsException<ArgumentException>(() => {
+                _ = CurveFittingUtils.StandardizeExponent(new double[] { 1, 1, double.NaN });
+            });
+        }
     }
 }

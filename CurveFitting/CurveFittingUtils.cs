@@ -122,5 +122,20 @@ namespace CurveFitting {
                 }
             }
         }
+
+        public static (int exp_scale, Vector v_standardized) StandardizeExponent(Vector v) {
+            if (v.Dim <= 0 || v.All(v => ddouble.IsZero(v.val))) {
+                throw new ArgumentException("invalid vector because it zero vector", nameof(v));
+            }
+
+            if (v.Any(v => !ddouble.IsFinite(v.val))) {
+                throw new ArgumentException("invalid vector because it contains infinite values", nameof(v));
+            }
+
+            int exp_scale = v.Max(v => double.ILogB((double)v.val));
+            Vector v_standardized = (x => ddouble.Ldexp(x, -exp_scale), v);
+
+            return (exp_scale, v_standardized);
+        }
     }
 }
