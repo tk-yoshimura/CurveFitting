@@ -29,7 +29,7 @@ namespace CurveFitting {
             for (int j = 0; j < iter; j++) {
                 errors = weights is null ? Error(parameters) : weights * Error(parameters);
                 jacobian = Jacobian(parameters);
-                jacobian_transpose = jacobian.Transpose;
+                jacobian_transpose = jacobian.T;
 
                 Matrix m = jacobian_transpose * jacobian + lambda * Matrix.Identity(Parameters);
 
