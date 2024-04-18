@@ -15,6 +15,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("e839771a-62fc-431e-a513-cb484cacc2e8")]
 
-[assembly: AssemblyVersion("1.7.0.*")]
+[assembly: AssemblyVersion("1.7.1.*")]
 
 [assembly: InternalsVisibleTo("CurveFittingTest")]
