@@ -20,8 +20,8 @@ ddouble[] ys1 = Vector.Polynomial(xs, p1), ys2 = Vector.Polynomial(xs, p2);
 PolynomialFitter fitter1 = new(xs, ys1, 3);
 PolynomialFitter fitter2 = new(xs, ys2, 3, intercept: 1);
 
-Assert.IsTrue((fitter1.ExecuteFitting() - p1).Norm < 1e-24);
-Assert.IsTrue((fitter2.ExecuteFitting() - p2).Norm < 1e-24);
+Assert.IsTrue((fitter1.Fit() - p1).Norm < 1e-24);
+Assert.IsTrue((fitter2.Fit() - p2).Norm < 1e-24);
 ```
 
 ## Licence

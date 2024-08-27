@@ -11,8 +11,11 @@ namespace CurveFitting {
         public RobustPadeFitter(Vector xs, Vector ys, int numer, int denom, ddouble? intercept = null)
             : base(xs, ys, numer, denom, intercept) { }
 
+        public RobustPadeFitter(SumTable sum_table, int numer, int denom, ddouble? intercept = null)
+            : base(sum_table, numer, denom, intercept) { }
+
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(int iter = 8, ddouble? norm_cost = null, double eps = 1e-16) {
+        public Vector Fit(int iter = 8, ddouble? norm_cost = null, double eps = 1e-16) {
             if (!(eps > 0)) {
                 throw new ArgumentOutOfRangeException(nameof(eps));
             }
@@ -20,7 +23,7 @@ namespace CurveFitting {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
-            Vector coef = base.ExecuteFitting(norm_cost: norm_cost);
+            Vector coef = base.Fit(norm_cost: norm_cost);
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
@@ -49,7 +52,7 @@ namespace CurveFitting {
                     weights[i] = r * r;
                 }
 
-                coef = base.ExecuteFitting(new Vector(weights), norm_cost);
+                coef = base.Fit(new Vector(weights), norm_cost);
 
                 iter--;
                 s = double.Max(s * 0.75, 1.25);

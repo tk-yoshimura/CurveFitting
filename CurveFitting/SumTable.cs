@@ -10,6 +10,9 @@ namespace CurveFitting {
 
         private Vector? w = null;
 
+        internal Vector X { get; }
+        internal Vector Y { get; }
+
         public SumTable(Vector x, Vector y) {
             if (x.Dim != y.Dim) {
                 throw new ArgumentException("invalid size", $"{nameof(x)},{nameof(y)}");
@@ -20,6 +23,9 @@ namespace CurveFitting {
             this.table = new() {
                 { (0, 0), x.Dim },
             };
+
+            this.X = x;
+            this.Y = y;
         }
 
         public ddouble this[int xn, int yn] {

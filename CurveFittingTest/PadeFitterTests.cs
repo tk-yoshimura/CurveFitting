@@ -8,22 +8,22 @@ namespace CurveFitting.Tests {
     [TestClass()]
     public class PadeFitterTests {
         [TestMethod()]
-        public void ExecuteFittingWithInterceptTest() {
+        public void FitWithInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
             ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
-            Vector parameters = fitter.ExecuteFitting();
+            Vector parameters = fitter.Fit();
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
-            Assert.AreEqual(0.75, fitter.FittingValue(0, parameters));
+            Assert.AreEqual(0.75, fitter.Regress(0, parameters));
 
             for (int i = 0; i < xs.Length; i++) {
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-5,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-5,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
 
@@ -31,20 +31,20 @@ namespace CurveFitting.Tests {
         }
 
         [TestMethod()]
-        public void ExecuteFittingWithoutInterceptTest() {
+        public void FitWithoutInterceptTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
             ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
-            Vector parameters = fitter.ExecuteFitting();
+            Vector parameters = fitter.Fit();
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
             for (int i = 0; i < xs.Length; i++) {
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-5,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-5,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
 
@@ -62,20 +62,20 @@ namespace CurveFitting.Tests {
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
-            Vector parameters = fitter.ExecuteFitting(ws);
+            Vector parameters = fitter.Fit(ws);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
-            Assert.AreEqual(0.75, fitter.FittingValue(0, parameters));
+            Assert.AreEqual(0.75, fitter.Regress(0, parameters));
 
             for (int i = 0; i < xs.Length; i++) {
                 if (i == 256) {
                     continue;
                 }
 
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-5,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-5,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }
@@ -91,7 +91,7 @@ namespace CurveFitting.Tests {
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
-            Vector parameters = fitter.ExecuteFitting(ws);
+            Vector parameters = fitter.Fit(ws);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
@@ -101,56 +101,56 @@ namespace CurveFitting.Tests {
                     continue;
                 }
 
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-5,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-5,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }
 
         [TestMethod()]
-        public void ExecuteFittingWithInterceptWithCostTest() {
+        public void FitWithInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
             ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
-            Assert.IsTrue(fitter.ExecuteFitting().Norm > fitter.ExecuteFitting(norm_cost: 1e-8).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(norm_cost: 1e-8).Norm > fitter.ExecuteFitting(norm_cost: 1e-4).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(norm_cost: 1e-4).Norm > fitter.ExecuteFitting(norm_cost: 1e-2).Norm);
+            Assert.IsTrue(fitter.Fit().Norm > fitter.Fit(norm_cost: 1e-8).Norm);
+            Assert.IsTrue(fitter.Fit(norm_cost: 1e-8).Norm > fitter.Fit(norm_cost: 1e-4).Norm);
+            Assert.IsTrue(fitter.Fit(norm_cost: 1e-4).Norm > fitter.Fit(norm_cost: 1e-2).Norm);
 
-            Vector parameters = fitter.ExecuteFitting(norm_cost: 1e-8);
+            Vector parameters = fitter.Fit(norm_cost: 1e-8);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
-            Assert.AreEqual(0.75, fitter.FittingValue(0, parameters));
+            Assert.AreEqual(0.75, fitter.Regress(0, parameters));
 
             for (int i = 0; i < xs.Length; i++) {
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-4,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-4,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }
 
         [TestMethod()]
-        public void ExecuteFittingWithoutInterceptWithCostTest() {
+        public void FitWithoutInterceptWithCostTest() {
             ddouble[] xs = Vector.Arange(1024) / 1024;
             ddouble[] ys = Vector.Func(x => ddouble.Cos(x) - 0.25, xs);
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
-            Assert.IsTrue(fitter.ExecuteFitting().Norm > fitter.ExecuteFitting(norm_cost: 1e-8).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(norm_cost: 1e-8).Norm > fitter.ExecuteFitting(norm_cost: 1e-4).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(norm_cost: 1e-4).Norm > fitter.ExecuteFitting(norm_cost: 1e-2).Norm);
+            Assert.IsTrue(fitter.Fit().Norm > fitter.Fit(norm_cost: 1e-8).Norm);
+            Assert.IsTrue(fitter.Fit(norm_cost: 1e-8).Norm > fitter.Fit(norm_cost: 1e-4).Norm);
+            Assert.IsTrue(fitter.Fit(norm_cost: 1e-4).Norm > fitter.Fit(norm_cost: 1e-2).Norm);
 
-            Vector parameters = fitter.ExecuteFitting(norm_cost: 1e-8);
+            Vector parameters = fitter.Fit(norm_cost: 1e-8);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
             for (int i = 0; i < xs.Length; i++) {
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-4,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-4,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }
@@ -166,24 +166,24 @@ namespace CurveFitting.Tests {
 
             PadeFitter fitter = new(xs, ys, intercept: 0.75, numer: 4, denom: 3);
 
-            Assert.IsTrue(fitter.ExecuteFitting(ws).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-8).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(ws, norm_cost: 1e-8).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-4).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(ws, norm_cost: 1e-4).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-2).Norm);
+            Assert.IsTrue(fitter.Fit(ws).Norm > fitter.Fit(ws, norm_cost: 1e-8).Norm);
+            Assert.IsTrue(fitter.Fit(ws, norm_cost: 1e-8).Norm > fitter.Fit(ws, norm_cost: 1e-4).Norm);
+            Assert.IsTrue(fitter.Fit(ws, norm_cost: 1e-4).Norm > fitter.Fit(ws, norm_cost: 1e-2).Norm);
 
-            Vector parameters = fitter.ExecuteFitting(ws, norm_cost: 1e-8);
+            Vector parameters = fitter.Fit(ws, norm_cost: 1e-8);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
 
-            Assert.AreEqual(0.75, fitter.FittingValue(0, parameters));
+            Assert.AreEqual(0.75, fitter.Regress(0, parameters));
 
             for (int i = 0; i < xs.Length; i++) {
                 if (i == 256) {
                     continue;
                 }
 
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-4,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-4,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }
@@ -199,11 +199,11 @@ namespace CurveFitting.Tests {
 
             PadeFitter fitter = new(xs, ys, numer: 4, denom: 3);
 
-            Assert.IsTrue(fitter.ExecuteFitting(ws).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-8).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(ws, norm_cost: 1e-8).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-4).Norm);
-            Assert.IsTrue(fitter.ExecuteFitting(ws, norm_cost: 1e-4).Norm > fitter.ExecuteFitting(ws, norm_cost: 1e-2).Norm);
+            Assert.IsTrue(fitter.Fit(ws).Norm > fitter.Fit(ws, norm_cost: 1e-8).Norm);
+            Assert.IsTrue(fitter.Fit(ws, norm_cost: 1e-8).Norm > fitter.Fit(ws, norm_cost: 1e-4).Norm);
+            Assert.IsTrue(fitter.Fit(ws, norm_cost: 1e-4).Norm > fitter.Fit(ws, norm_cost: 1e-2).Norm);
 
-            Vector parameters = fitter.ExecuteFitting(ws, norm_cost: 1e-8);
+            Vector parameters = fitter.Fit(ws, norm_cost: 1e-8);
 
             Console.WriteLine($"Numer : {parameters[..fitter.Numer]}");
             Console.WriteLine($"Denom : {parameters[fitter.Numer..]}");
@@ -213,8 +213,8 @@ namespace CurveFitting.Tests {
                     continue;
                 }
 
-                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.FittingValue(xs[i], parameters)) < 1e-4,
-                    $"\nexpected : {ys[i]}\n actual  : {fitter.FittingValue(xs[i], parameters)}"
+                Assert.IsTrue(ddouble.Abs(ys[i] - fitter.Regress(xs[i], parameters)) < 1e-4,
+                    $"\nexpected : {ys[i]}\n actual  : {fitter.Regress(xs[i], parameters)}"
                 );
             }
         }

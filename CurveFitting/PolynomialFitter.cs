@@ -26,7 +26,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング値</summary>
-        public override ddouble FittingValue(ddouble x, Vector parameters) {
+        public override ddouble Regress(ddouble x, Vector parameters) {
             if (parameters.Dim != Parameters) {
                 throw new ArgumentException("invalid size", nameof(parameters));
             }
@@ -37,7 +37,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector? weights = null) {
+        public Vector Fit(Vector? weights = null) {
             sum_table.W = weights;
             (Matrix m, Vector v) = GenerateTable(sum_table, Degree, enable_intercept: intercept is null);
 

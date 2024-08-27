@@ -12,7 +12,7 @@ namespace CurveFitting {
             : base(xs, ys, degree, intercept) { }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(int iter = 8, double eps = 1e-16) {
+        public Vector Fit(int iter = 8, double eps = 1e-16) {
             if (!(eps > 0)) {
                 throw new ArgumentOutOfRangeException(nameof(eps));
             }
@@ -20,7 +20,7 @@ namespace CurveFitting {
             double err_threshold, inv_err;
             double[] weights = new double[Points], errs = new double[Points];
 
-            Vector coef = base.ExecuteFitting();
+            Vector coef = base.Fit();
 
             for (int i = 0; i < Points; i++) {
                 weights[i] = 1;
@@ -49,7 +49,7 @@ namespace CurveFitting {
                     weights[i] = r * r;
                 }
 
-                coef = base.ExecuteFitting(new Vector(weights));
+                coef = base.Fit(new Vector(weights));
 
                 iter--;
                 s = double.Max(s * 0.75, 1.25);

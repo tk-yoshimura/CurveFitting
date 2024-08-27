@@ -31,7 +31,20 @@ namespace CurveFitting {
             this.Denom = denom;
         }
 
-        public override ddouble FittingValue(ddouble x, Vector parameters) {
+        public PadeFitter(SumTable sum_table, int numer, int denom, ddouble? intercept = null)
+            : base(sum_table.X, sum_table.Y,
+                  parameters:
+                  (numer >= 2 && denom >= 2)
+                      ? (numer + denom)
+                      : throw new ArgumentOutOfRangeException($"{nameof(numer)},{nameof(denom)}")) {
+
+            this.sum_table = sum_table;
+            this.intercept = intercept;
+            this.Numer = numer;
+            this.Denom = denom;
+        }
+
+        public override ddouble Regress(ddouble x, Vector parameters) {
             if (parameters.Dim != Parameters) {
                 throw new ArgumentException("invalid size", nameof(parameters));
             }
@@ -51,7 +64,7 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector? weights = null, ddouble? norm_cost = null) {
+        public Vector Fit(Vector? weights = null, ddouble? norm_cost = null) {
             sum_table.W = weights;
             (Matrix m, Vector v) = GenerateTable(sum_table, Numer, Denom);
 

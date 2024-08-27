@@ -6,7 +6,7 @@ namespace CurveFitting.Tests {
     [TestClass()]
     public class GaussNewtonFitterTests {
         [TestMethod()]
-        public void ExecuteFittingTest() {
+        public void FitTest() {
             static ddouble fitting_func(ddouble x, Vector parameter) {
                 ddouble a = parameter[0], b = parameter[1];
 
@@ -27,7 +27,7 @@ namespace CurveFitting.Tests {
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
-            var v = fitter.ExecuteFitting(new Vector(3, 4));
+            var v = fitter.Fit(new Vector(3, 4));
 
             Assert.IsTrue((v - p).Norm < 1e-20);
         }
@@ -57,7 +57,7 @@ namespace CurveFitting.Tests {
 
             GaussNewtonFitter fitter = new(xs, ys, new FittingFunction(2, fitting_func, fitting_diff_func));
 
-            var v = fitter.ExecuteFitting(new Vector(3, 4), weights: ws);
+            var v = fitter.Fit(new Vector(3, 4), weights: ws);
 
             Assert.IsTrue((v - p).Norm < 1e-20);
         }

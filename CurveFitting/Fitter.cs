@@ -49,20 +49,20 @@ namespace CurveFitting {
                 throw new ArgumentException("invalid size", nameof(parameters));
             }
 
-            Vector errors = FittingValue(X, parameters) - Y;
+            Vector errors = Regress(X, parameters) - Y;
 
             return errors;
         }
 
         /// <summary>フィッティング値</summary>
-        public abstract ddouble FittingValue(ddouble x, Vector parameters);
+        public abstract ddouble Regress(ddouble x, Vector parameters);
 
         /// <summary>フィッティング値</summary>
-        public Vector FittingValue(Vector xs, Vector parameters) {
+        public Vector Regress(Vector xs, Vector parameters) {
             ddouble[] ys = new ddouble[xs.Dim];
 
             for (int i = 0; i < xs.Dim; i++) {
-                ys[i] = FittingValue(xs[i], parameters);
+                ys[i] = Regress(xs[i], parameters);
             }
 
             return ys;

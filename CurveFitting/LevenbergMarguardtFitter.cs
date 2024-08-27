@@ -15,12 +15,12 @@ namespace CurveFitting {
         }
 
         /// <summary>フィッティング値</summary>
-        public override ddouble FittingValue(ddouble x, Vector parameters) {
+        public override ddouble Regress(ddouble x, Vector parameters) {
             return func.F(x, parameters);
         }
 
         /// <summary>フィッティング</summary>
-        public Vector ExecuteFitting(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int iter = 128, Vector? weights = null, Func<Vector, bool>? iter_callback = null) {
+        public Vector Fit(Vector parameters, double lambda_init = 1, double lambda_decay = 0.9, int iter = 128, Vector? weights = null, Func<Vector, bool>? iter_callback = null) {
             Vector errors, dparam;
             Matrix jacobian, jacobian_transpose;
 
