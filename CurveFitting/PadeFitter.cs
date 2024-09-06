@@ -77,7 +77,7 @@ namespace CurveFitting {
             }
 
             if (intercept is null) {
-                Vector x = Matrix.Solve(m, v);
+                Vector x = Matrix.SolvePositiveSymmetric(m, v, enable_check_symmetric: false);
 
                 Vector parameters = Vector.Concat(x[..Numer], 1, x[Numer..]);
 
@@ -87,7 +87,7 @@ namespace CurveFitting {
                 v = v[1..] - intercept.Value * m[0, 1..];
                 m = m[1.., 1..];
 
-                Vector x = Matrix.Solve(m, v);
+                Vector x = Matrix.SolvePositiveSymmetric(m, v, enable_check_symmetric: false);
 
                 Vector parameters = Vector.Concat(intercept.Value, x[..(Numer - 1)], 1, x[(Numer - 1)..]);
 

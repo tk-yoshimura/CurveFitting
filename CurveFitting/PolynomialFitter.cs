@@ -42,12 +42,12 @@ namespace CurveFitting {
             (Matrix m, Vector v) = GenerateTable(sum_table, Degree, enable_intercept: intercept is null);
 
             if (intercept is null) {
-                Vector parameters = Matrix.Solve(m, v);
+                Vector parameters = Matrix.SolvePositiveSymmetric(m, v, enable_check_symmetric: false);
 
                 return parameters;
             }
             else {
-                Vector parameters = Vector.Concat(intercept.Value, Matrix.Solve(m, v));
+                Vector parameters = Vector.Concat(intercept.Value, Matrix.SolvePositiveSymmetric(m, v, enable_check_symmetric: false));
 
                 return parameters;
             }

@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TYoshimura.Algebra" Version="2.1.7" />
+    <PackageReference Include="TYoshimura.Algebra" Version="2.2.2" />
     <PackageReference Include="TYoshimura.DoubleDouble" Version="3.2.6" />
   </ItemGroup>
 
