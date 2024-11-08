@@ -33,7 +33,7 @@ namespace CurveFitting {
             while (iter > 0) {
                 Vector err = Error(coef);
                 for (int i = 0; i < Points; i++) {
-                    errs[i] = Math.Abs((double)err[i]);
+                    errs[i] = double.Abs((double)err[i]);
                 }
 
                 double[] sort_err_list = (double[])errs.Clone();
