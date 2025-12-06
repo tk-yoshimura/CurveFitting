@@ -18,9 +18,9 @@ namespace CurveFitting.Tests {
                         Console.WriteLine($"{m},{n}");
 
                         Assert.AreEqual(coef_counts, m + n);
-                        Assert.IsTrue(int.Abs(m - n) <= degree_delta);
-                        Assert.IsTrue(m > 1);
-                        Assert.IsTrue(n > 1);
+                        Assert.IsLessThanOrEqualTo(degree_delta, int.Abs(m - n));
+                        Assert.IsGreaterThan(1, m);
+                        Assert.IsGreaterThan(1, n);
                     }
                 }
             }
@@ -156,15 +156,15 @@ namespace CurveFitting.Tests {
             Assert.AreEqual(-2, exp_scale);
             Assert.AreEqual(new Vector(0, 0.5, 1, -0.5), u);
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 _ = CurveFittingUtils.StandardizeExponent(new double[] { 0, 0, 0 });
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 _ = CurveFittingUtils.StandardizeExponent(new double[] { 1, 1, double.PositiveInfinity });
             });
 
-            Assert.ThrowsException<ArgumentException>(() => {
+            Assert.ThrowsExactly<ArgumentException>(() => {
                 _ = CurveFittingUtils.StandardizeExponent(new double[] { 1, 1, double.NaN });
             });
         }

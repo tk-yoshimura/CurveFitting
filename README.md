@@ -2,7 +2,7 @@
  Curvefitting - linear, polynomial, pade, arbitrary function 
 
 ## Requirement
-.NET 8.0  
+.NET 10.0  
 [Algebra](https://github.com/tk-yoshimura/Algebra)  
 [DoubleDouble](https://github.com/tk-yoshimura/DoubleDouble)
  
